@@ -1,4 +1,5 @@
 #![cfg_attr(target_os = "android", allow(dead_code))]
+#![cfg_attr(target_os = "windows", allow(dead_code))]
 // TODO: remove the allow(dead_code) for android once it's up to scratch.
 use futures::{sync::oneshot, Future};
 use ipnetwork::IpNetwork;
@@ -15,6 +16,10 @@ mod imp;
 
 #[cfg(target_os = "android")]
 #[path = "android.rs"]
+mod imp;
+
+#[cfg(target_os = "windows")]
+#[path = "windows.rs"]
 mod imp;
 
 pub use imp::Error as PlatformError;

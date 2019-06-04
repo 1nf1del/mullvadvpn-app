@@ -49,6 +49,10 @@ pub enum Error {
     #[error(display = "Failed to configure Wireguard sockets to bypass the tunnel")]
     BypassError(#[error(cause)] BoxedError),
 
+    /// Interface name is null.
+    #[error(display = "Tunnel interface name was not set")]
+    InterfaceNameIsNull,
+
     /// Pinging timed out.
     #[error(display = "Ping timed out")]
     PingTimeoutError,

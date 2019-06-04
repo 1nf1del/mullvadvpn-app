@@ -2,8 +2,10 @@ use self::api::*;
 pub use self::api::{
     ErrorSink, WinNet_ActivateConnectivityMonitor, WinNet_DeactivateConnectivityMonitor,
 };
+use crate::routing::Node;
+use ipnetwork::IpNetwork;
 use libc::{c_char, c_void, wchar_t};
-use std::{ffi::OsString, ptr};
+use std::{ffi::OsString, net::IpAddr, ptr};
 use widestring::WideCString;
 
 /// Errors that this module may produce.
@@ -107,7 +109,6 @@ pub fn get_tap_interface_alias() -> Result<OsString, Error> {
 
     Ok(alias.to_os_string())
 }
-
 /// Returns true if current host is not connected to any network
 pub fn is_offline() -> Result<bool, Error> {
     match unsafe { WinNet_CheckConnectivity(Some(error_sink), ptr::null_mut()) } {
@@ -121,6 +122,173 @@ pub fn is_offline() -> Result<bool, Error> {
     }
 }
 
+#[repr(packed)]
+struct WinNetIpType(u8);
+
+const WINNET_IPV4: u8 = 0;
+const WINNET_IPV6: u8 = 1;
+
+impl WinNetIpType {
+    pub fn v4() -> Self {
+        WinNetIpType(WINNET_IPV4)
+    }
+
+    pub fn v6() -> Self {
+        WinNetIpType(WINNET_IPV6)
+    }
+}
+
+
+#[repr(packed)]
+pub struct WinNetIpNetwork {
+    ip_type: WinNetIpType,
+    ip_bytes: [u8; 16],
+    prefix: u8,
+}
+
+impl From<IpNetwork> for WinNetIpNetwork {
+    fn from(network: IpNetwork) -> WinNetIpNetwork {
+        let WinNetIp{ip_type, ip_bytes} = WinNetIp::from(network.ip());
+        let prefix = network.prefix();
+        WinNetIpNetwork { ip_type, ip_bytes, prefix }
+    }
+}
+
+#[repr(packed)]
+pub struct WinNetIp {
+    ip_type: WinNetIpType,
+    ip_bytes: [u8; 16],
+}
+
+impl From<IpAddr> for WinNetIp {
+    fn from(addr: IpAddr) -> WinNetIp {
+        let mut bytes = [0u8; 16];
+        match addr {
+            IpAddr::V4(v4_addr) => {
+                bytes[..4].copy_from_slice(&v4_addr.octets());
+                WinNetIp {
+                    ip_type: WinNetIpType::v4(),
+                    ip_bytes: bytes,
+                }
+            }
+            IpAddr::V6(v6_addr) => {
+                bytes.copy_from_slice(&v6_addr.octets());
+
+                WinNetIp {
+                    ip_type: WinNetIpType::v6(),
+                    ip_bytes: bytes,
+                }
+            }
+        }
+    }
+}
+
+#[repr(packed)]
+pub struct WinNetNode {
+    gateway: *mut WinNetIp,
+    device_name: *mut u16,
+}
+
+impl WinNetNode {
+    fn new(name: &str, ip: WinNetIp) -> Self {
+        let device_name = WideCString::from_str(name)
+            .expect("Failed to convert UTF-8 string to null terminated UCS string")
+            .into_raw();
+        let gateway = Box::into_raw(Box::new(ip));
+        Self {
+            gateway,
+            device_name,
+        }
+    }
+
+    fn from_gateway(ip: WinNetIp) -> Self {
+        let gateway = Box::into_raw(Box::new(ip));
+        Self {
+            gateway,
+            device_name: ptr::null_mut(),
+        }
+    }
+
+
+    fn from_device(name: &str) -> Self {
+        let device_name = WideCString::from_str(name)
+            .expect("Failed to convert UTF-8 string to null terminated UCS string")
+            .into_raw();
+        Self {
+            gateway: ptr::null_mut(),
+            device_name,
+        }
+    }
+}
+
+impl From<&Node> for WinNetNode {
+    fn from(node: &Node) -> Self {
+        match (node.get_address(), node.get_device()) {
+            (Some(gateway), None) => WinNetNode::from_gateway(gateway.into()),
+            (None, Some(device)) => WinNetNode::from_device(device),
+            (Some(gateway), Some(device)) => WinNetNode::new(device, gateway.into()),
+            _ => unreachable!(),
+        }
+    }
+}
+
+impl Drop for WinNetNode {
+    fn drop(&mut self) {
+        if !self.gateway.is_null() {
+            unsafe {
+                let _ = Box::from_raw(self.gateway);
+            }
+        }
+        if !self.device_name.is_null() {
+            unsafe {
+                let _ = WideCString::from_ptr_str(self.device_name);
+            }
+        }
+    }
+}
+
+
+#[repr(packed)]
+pub struct WinNetRoute {
+    gateway: WinNetIpNetwork,
+    node: *mut WinNetNode,
+}
+
+impl WinNetRoute {
+    pub fn through_default_node(gateway: WinNetIpNetwork) -> Self {
+        Self {
+            gateway,
+            node: ptr::null_mut(),
+        }
+    }
+
+    pub fn new(node: WinNetNode, gateway: WinNetIpNetwork) -> Self {
+        let node = Box::into_raw(Box::new(node));
+        WinNetRoute { gateway, node }
+    }
+}
+
+impl Drop for WinNetRoute {
+    fn drop(&mut self) {
+        if !self.node.is_null() {
+            unsafe {
+                let _ = Box::from_raw(self.node);
+            }
+            self.node = ptr::null_mut();
+        }
+    }
+}
+
+pub fn actiavte_routing_manager(routes: &[WinNetRoute]) -> bool {
+    let ptr = routes.as_ptr();
+    let length: u32 = routes.len() as u32;
+    unsafe { WinNet_ActivateRouteManager(ptr, length, Some(error_sink), ptr::null_mut()) }
+}
+
+pub fn deactivate_routing_manager() -> bool {
+    unsafe { WinNet_DeactivateRouteManager() }
+}
+
 #[allow(non_snake_case)]
 mod api {
     use libc::{c_char, c_void, wchar_t};
@@ -131,6 +299,17 @@ mod api {
     pub type ConnectivityCallback = unsafe extern "system" fn(is_connected: bool, ctx: *mut c_void);
 
     extern "system" {
+        #[link_name = "WinNet_ActivateRouteManager"]
+        pub fn WinNet_ActivateRouteManager(
+            routes: *const super::WinNetRoute,
+            num_routes: u32,
+            sink: Option<ErrorSink>,
+            sink_context: *mut c_void,
+        ) -> bool;
+
+        #[link_name = "WinNet_DeactivateRouteManager"]
+        pub fn WinNet_DeactivateRouteManager() -> bool;
+
         #[link_name = "WinNet_EnsureTopMetric"]
         pub fn WinNet_EnsureTopMetric(
             tunnel_interface_alias: *const wchar_t,

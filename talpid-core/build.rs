@@ -53,6 +53,9 @@ fn main() {
     declare_library(WINFW_DIR_VAR, WINFW_BUILD_DIR, "winfw");
     declare_library(WINDNS_DIR_VAR, WINDNS_BUILD_DIR, "windns");
     declare_library(WINNET_DIR_VAR, WINNET_BUILD_DIR, "winnet");
+    let lib_dir = manifest_dir().join("../dist-assets/binaries/windows");
+    println!("cargo:rustc-link-search={}", &lib_dir.display());
+    println!("cargo:rustc-link-lib=dylib=libwg");
 }
 
 #[cfg(not(windows))]

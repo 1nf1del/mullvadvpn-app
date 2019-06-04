@@ -1,9 +1,30 @@
 use super::{Config, Error, Result, Tunnel};
-use crate::tunnel::tun_provider::{Tun, TunConfig, TunProvider};
+use crate::tunnel::tun_provider::{Tun, TunProvider};
+use cfg_if::cfg_if;
+
+#[cfg(not(target_os = "windows"))]
+use crate::tunnel::tun_provider::TunConfig;
+
+#[cfg(target_os = "windows")]
+use crate::tunnel::tun_provider::windows::WinTun;
 use ipnetwork::IpNetwork;
-use std::{ffi::CString, fs, net::IpAddr, os::unix::io::AsRawFd, path::Path};
+
 #[cfg(target_os = "android")]
 use talpid_types::BoxedError;
+
+use std::{ffi::CString, fs, path::Path};
+
+#[cfg(not(target_os = "windows"))]
+use std::net::IpAddr;
+
+#[cfg(not(target_os = "windows"))]
+use std::os::unix::io::AsRawFd;
+
+#[cfg(target_os = "windows")]
+use std::ffi::CStr;
+
+#[cfg(target_os = "windows")]
+use std::os::windows::io::AsRawHandle;
 
 pub struct WgGoTunnel {
     interface_name: String,
@@ -15,6 +36,7 @@ pub struct WgGoTunnel {
 }
 
 impl WgGoTunnel {
+    #[cfg(not(target_os = "windows"))]
     pub fn start_tunnel(
         config: &Config,
         log_path: Option<&Path>,
@@ -59,6 +81,51 @@ impl WgGoTunnel {
         })
     }
 
+    #[cfg(target_os = "windows")]
+    pub fn start_tunnel(
+        config: &Config,
+        log_path: Option<&Path>,
+        _tun_provider: &dyn TunProvider,
+        _routes: impl Iterator<Item = IpNetwork>,
+    ) -> Result<Self> {
+        let log_file = prepare_log_file(log_path)?;
+        let wg_config_str = config.to_userspace_format();
+        let iface_name = CString::new(String::from("wg-mullvad").as_bytes())
+            .map_err(Error::InterfaceNameError)?;
+
+        let mut real_iface_name_raw: *mut i8 = std::ptr::null_mut();
+
+        let handle = unsafe {
+            wgTurnOn(
+                iface_name.as_ptr(),
+                config.mtu as i64,
+                wg_config_str.as_ptr(),
+                log_file.as_raw_handle(),
+                WG_GO_LOG_DEBUG,
+                &mut real_iface_name_raw as *mut _,
+            )
+        };
+
+        if handle < 0 {
+            return Err(Error::StartWireguardError { status: handle });
+        }
+
+        if real_iface_name_raw.is_null() {
+            return Err(Error::InterfaceNameIsNull);
+        }
+        let real_interface_name = unsafe { CStr::from_ptr(real_iface_name_raw).to_string_lossy() };
+
+        Ok(WgGoTunnel {
+            interface_name: real_interface_name.to_string(),
+            handle: Some(handle),
+            _tunnel_device: Box::new(WinTun {
+                interface_name: real_interface_name.to_string(),
+            }),
+            _log_file: log_file,
+        })
+    }
+
+    #[cfg(not(target_os = "windows"))]
     fn create_tunnel_config(config: &Config, routes: impl Iterator<Item = IpNetwork>) -> TunConfig {
         let mut dns_servers = vec![IpAddr::V4(config.ipv4_gateway)];
         dns_servers.extend(config.ipv6_gateway.map(IpAddr::V6));
@@ -104,8 +171,16 @@ impl Drop for WgGoTunnel {
     }
 }
 
+cfg_if! {
+    if #[cfg(not(target_os = "windows"))] {
+        static NULL_DEVICE: &str = "/dev/null";
+    } else {
+        static NULL_DEVICE: &str = "NUL";
+    }
+}
+
 fn prepare_log_file(log_path: Option<&Path>) -> Result<fs::File> {
-    fs::File::create(log_path.unwrap_or("/dev/null".as_ref())).map_err(Error::PrepareLogFileError)
+    fs::File::create(log_path.unwrap_or(NULL_DEVICE.as_ref())).map_err(Error::PrepareLogFileError)
 }
 
 impl Tunnel for WgGoTunnel {
@@ -128,14 +203,13 @@ type WgLogLevel = i32;
 // wireguard-go supports log levels 0 through 3 with 3 being the most verbose
 const WG_GO_LOG_DEBUG: WgLogLevel = 3;
 
-#[cfg_attr(target_os = "android", link(name = "wg", kind = "dylib"))]
-#[cfg_attr(not(target_os = "android"), link(name = "wg", kind = "static"))]
 extern "C" {
     // Creates a new wireguard tunnel, uses the specific interface name, MTU and file descriptors
     // for the tunnel device and logging.
     //
     // Positive return values are tunnel handles for this specific wireguard tunnel instance.
     // Negative return values signify errors. All error codes are opaque.
+    #[cfg(not(target_os = "windows"))]
     fn wgTurnOnWithFd(
         iface_name: *const i8,
         mtu: i64,
@@ -143,6 +217,17 @@ extern "C" {
         fd: Fd,
         log_fd: Fd,
         logLevel: WgLogLevel,
+    ) -> i32;
+
+    // Windows
+    #[cfg(target_os = "windows")]
+    fn wgTurnOn(
+        iface_name: *const i8,
+        mtu: i64,
+        settings: *const i8,
+        log_fd: Fd,
+        logLevel: WgLogLevel,
+        real_interface_name: *mut *mut i8,
     ) -> i32;
 
     // Pass a handle that was created by wgTurnOnWithFd to stop a wireguard tunnel.

@@ -241,7 +241,7 @@ type ErrorSink = extern "system" fn(
 );
 
 #[allow(non_snake_case)]
-extern "system" {
+extern "stdcall" {
 
     #[link_name = "WinDns_Initialize"]
     pub fn WinDns_Initialize(
