@@ -37,6 +37,7 @@ class AccountVerificationProcedure: GroupProcedure, InputProcedure, OutputProced
 
         // Request account data from the API
         let networkRequest = MullvadAPI.getAccountExpiry(accountToken: accountToken)
+        networkRequest.input = self.input
 
         super.init(dispatchQueue: underlyingQueue, operations: [
             // Wrap the network request into the ignoreErrorsProcedure to make sure that any network
@@ -46,9 +47,7 @@ class AccountVerificationProcedure: GroupProcedure, InputProcedure, OutputProced
         ])
 
         // Copy the input of the group procedure to the input of the starting procedure
-        addWillExecuteBlockObserver { [weak networkRequest] (groupProcedure, _) in
-            networkRequest?.input = groupProcedure.input
-        }
+        bindAndNotifySetInputReady(to: networkRequest)
 
         networkRequest.addWillFinishBlockObserver { [weak self] (networkRequest, error, _) in
             guard let self = self else { return }

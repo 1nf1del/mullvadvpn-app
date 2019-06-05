@@ -9,14 +9,14 @@
 
 import Foundation
 
-struct RelayList: Decodable {
-    struct Country: Decodable {
+struct RelayList: Codable {
+    struct Country: Codable {
         let name: String
         let code: String
         let cities: [City]
     }
 
-    struct City: Decodable {
+    struct City: Codable {
         let name: String
         let code: String
         let latitude: Double
@@ -24,7 +24,7 @@ struct RelayList: Decodable {
         let relays: [Hostname]
     }
 
-    struct Hostname: Decodable {
+    struct Hostname: Codable {
         let hostname: String
         let ipv4AddrIn: String
         let includeInCountry: Bool

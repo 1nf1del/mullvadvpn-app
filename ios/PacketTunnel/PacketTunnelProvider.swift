@@ -9,6 +9,7 @@
 import Foundation
 import Network
 import NetworkExtension
+import ProcedureKit
 import os.log
 
 enum PacketTunnelProviderError: Error {
@@ -42,6 +43,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             completionHandler(PacketTunnelProviderError.invalidProtocolConfiguration)
             return
         }
+
 
         let dnsSettings = NEDNSSettings(servers: ["10.0.0.1"])
         // All DNS queries must first go through the tunnel's DNS

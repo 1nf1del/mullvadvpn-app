@@ -20,6 +20,7 @@ final class JSONRequestProcedure<Input, Output: Decodable>: GroupProcedure, Inpu
         self.input = input.flatMap { .ready($0) } ?? .pending
 
         let createRequest = TransformProcedure { try requestBuilder($0) }
+        createRequest.input = self.input
 
         let networkRequest = NetworkProcedure {
             NetworkDataProcedure(session: URLSession.shared)
@@ -33,10 +34,7 @@ final class JSONRequestProcedure<Input, Output: Decodable>: GroupProcedure, Inpu
         super.init(dispatchQueue: underlyingQueue, operations: [createRequest, networkRequest, payloadParsing])
 
         bind(from: payloadParsing)
-
-        addWillExecuteBlockObserver { (procedure, _) in
-            createRequest.input = procedure.input
-        }
+        bindAndNotifySetInputReady(to: createRequest)
     }
 }
 

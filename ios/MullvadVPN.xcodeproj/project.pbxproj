@@ -24,6 +24,8 @@
 		58723E7922A69DE6009837F5 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 58723E7622A69DE6009837F5 /* x25519.c */; };
 		58723E7A22A69DE6009837F5 /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58723E7722A69DE6009837F5 /* Curve25519.swift */; };
 		587425C12299833500CA2045 /* RootContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587425C02299833500CA2045 /* RootContainerViewController.swift */; };
+		58781CC622AE5F4B009B9D8E /* ProcedureKit+Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */; };
+		58781CC722AE602B009B9D8E /* ProcedureKit+Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */; };
 		587B08E0229433EB000E6F17 /* LoginState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587B08DF229433EB000E6F17 /* LoginState.swift */; };
 		587B08E2229460C1000E6F17 /* WebLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587B08E1229460C1000E6F17 /* WebLinks.swift */; };
 		587CBFE322807F530028DED3 /* UIColor+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587CBFE222807F530028DED3 /* UIColor+Helpers.swift */; };
@@ -36,6 +38,13 @@
 		58ADDB3C227B1BD200FAFEA7 /* JsonRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3B227B1BD200FAFEA7 /* JsonRpc.swift */; };
 		58ADDB3E227B1CD900FAFEA7 /* MullvadAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */; };
 		58ADDB40227B1E7100FAFEA7 /* Optional+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3F227B1E7100FAFEA7 /* Optional+Unwrap.swift */; };
+		58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */; };
+		58BFA5C122A7C92400A6173D /* JSONRequestProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E30228B2AEB00C7710B /* JSONRequestProcedure.swift */; };
+		58BFA5C222A7C92900A6173D /* JsonRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3B227B1BD200FAFEA7 /* JsonRpc.swift */; };
+		58BFA5C322A7C93400A6173D /* RelayList.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5888AD88227B18C40051EB06 /* RelayList.swift */; };
+		58BFA5C422A7C94600A6173D /* AccountVerificationProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E32228B383300C7710B /* AccountVerificationProcedure.swift */; };
+		58BFA5C622A7C97F00A6173D /* RelayListCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58BFA5C522A7C97F00A6173D /* RelayListCache.swift */; };
+		58BFA5C722A7C97F00A6173D /* RelayListCache.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58BFA5C522A7C97F00A6173D /* RelayListCache.swift */; };
 		58BFA5CC22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */; };
 		58BFA5CD22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */; };
 		58C3A4B222456F1B00340BDB /* AccountInputGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C3A4B122456F1A00340BDB /* AccountInputGroupView.swift */; };
@@ -109,6 +118,7 @@
 		58723E7722A69DE6009837F5 /* Curve25519.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curve25519.swift; sourceTree = "<group>"; };
 		58723E7822A69DE6009837F5 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		587425C02299833500CA2045 /* RootContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerViewController.swift; sourceTree = "<group>"; };
+		58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcedureKit+Patches.swift"; sourceTree = "<group>"; };
 		587B08DF229433EB000E6F17 /* LoginState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginState.swift; sourceTree = "<group>"; };
 		587B08E1229460C1000E6F17 /* WebLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebLinks.swift; sourceTree = "<group>"; };
 		587CBFE222807F530028DED3 /* UIColor+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Helpers.swift"; sourceTree = "<group>"; };
@@ -121,6 +131,7 @@
 		58ADDB3B227B1BD200FAFEA7 /* JsonRpc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonRpc.swift; sourceTree = "<group>"; };
 		58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MullvadAPI.swift; sourceTree = "<group>"; };
 		58ADDB3F227B1E7100FAFEA7 /* Optional+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Unwrap.swift"; sourceTree = "<group>"; };
+		58BFA5C522A7C97F00A6173D /* RelayListCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayListCache.swift; sourceTree = "<group>"; };
 		58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationConfiguration.swift; sourceTree = "<group>"; };
 		58C3A4B122456F1A00340BDB /* AccountInputGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInputGroupView.swift; sourceTree = "<group>"; };
 		58CCA00F224249A1004F3011 /* ConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
@@ -249,7 +260,9 @@
 				58535B84229E89E7004BCBBD /* WeakBox.swift */,
 				587B08E1229460C1000E6F17 /* WebLinks.swift */,
 				58FBDAAA22A52DC500EB69A3 /* MullvadVPN-Bridging-Header.h */,
+				58BFA5C522A7C97F00A6173D /* RelayListCache.swift */,
 				58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */,
+				58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */,
 			);
 			path = MullvadVPN;
 			sourceTree = "<group>";
@@ -525,9 +538,11 @@
 				582BB1B3229574F40055B6EF /* SettingsAccountCell.swift in Sources */,
 				58CCA010224249A1004F3011 /* ConnectViewController.swift in Sources */,
 				581CBCE62296B97300727D7F /* ViewControllerIdentifier.swift in Sources */,
+				58BFA5C622A7C97F00A6173D /* RelayListCache.swift in Sources */,
 				582BB1B1229569620055B6EF /* CustomNavigationBar.swift in Sources */,
 				58461AD3228D622E00B72ECB /* Account.swift in Sources */,
 				5888AD87227B17950051EB06 /* SelectLocationController.swift in Sources */,
+				58781CC622AE5F4B009B9D8E /* ProcedureKit+Patches.swift in Sources */,
 				58F19E35228C15BA00C7710B /* SpinnerActivityIndicatorView.swift in Sources */,
 				58ADDB40227B1E7100FAFEA7 /* Optional+Unwrap.swift in Sources */,
 				58CCA0162242560B004F3011 /* UIColor+Palette.swift in Sources */,
@@ -565,9 +580,16 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58781CC722AE602B009B9D8E /* ProcedureKit+Patches.swift in Sources */,
 				58723E7A22A69DE6009837F5 /* Curve25519.swift in Sources */,
 				58BFA5CD22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */,
+				58BFA5C222A7C92900A6173D /* JsonRpc.swift in Sources */,
+				58BFA5C322A7C93400A6173D /* RelayList.swift in Sources */,
+				58BFA5C122A7C92400A6173D /* JSONRequestProcedure.swift in Sources */,
 				58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */,
+				58BFA5C722A7C97F00A6173D /* RelayListCache.swift in Sources */,
+				58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */,
+				58BFA5C422A7C94600A6173D /* AccountVerificationProcedure.swift in Sources */,
 				58723E7922A69DE6009837F5 /* x25519.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
