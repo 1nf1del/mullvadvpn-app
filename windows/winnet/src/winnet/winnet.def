@@ -7,3 +7,5 @@ EXPORTS
 	WinNet_ActivateConnectivityMonitor
 	WinNet_DeactivateConnectivityMonitor
 	WinNet_CheckConnectivity
+	WinNet_ActivateRouteManager
+	WinNet_DeactivateRouteManager
