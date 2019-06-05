@@ -36,6 +36,8 @@
 		58ADDB3C227B1BD200FAFEA7 /* JsonRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3B227B1BD200FAFEA7 /* JsonRpc.swift */; };
 		58ADDB3E227B1CD900FAFEA7 /* MullvadAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */; };
 		58ADDB40227B1E7100FAFEA7 /* Optional+Unwrap.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3F227B1E7100FAFEA7 /* Optional+Unwrap.swift */; };
+		58BFA5CC22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */; };
+		58BFA5CD22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */; };
 		58C3A4B222456F1B00340BDB /* AccountInputGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C3A4B122456F1A00340BDB /* AccountInputGroupView.swift */; };
 		58CCA010224249A1004F3011 /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CCA00F224249A1004F3011 /* ConnectViewController.swift */; };
 		58CCA01222424D11004F3011 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CCA01122424D11004F3011 /* SettingsViewController.swift */; };
@@ -119,6 +121,7 @@
 		58ADDB3B227B1BD200FAFEA7 /* JsonRpc.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonRpc.swift; sourceTree = "<group>"; };
 		58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MullvadAPI.swift; sourceTree = "<group>"; };
 		58ADDB3F227B1E7100FAFEA7 /* Optional+Unwrap.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Unwrap.swift"; sourceTree = "<group>"; };
+		58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationConfiguration.swift; sourceTree = "<group>"; };
 		58C3A4B122456F1A00340BDB /* AccountInputGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInputGroupView.swift; sourceTree = "<group>"; };
 		58CCA00F224249A1004F3011 /* ConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
 		58CCA01122424D11004F3011 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
@@ -246,6 +249,7 @@
 				58535B84229E89E7004BCBBD /* WeakBox.swift */,
 				587B08E1229460C1000E6F17 /* WebLinks.swift */,
 				58FBDAAA22A52DC500EB69A3 /* MullvadVPN-Bridging-Header.h */,
+				58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */,
 			);
 			path = MullvadVPN;
 			sourceTree = "<group>";
@@ -516,6 +520,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				58BFA5CC22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */,
 				582BB1B52295780F0055B6EF /* AccountExpiry.swift in Sources */,
 				582BB1B3229574F40055B6EF /* SettingsAccountCell.swift in Sources */,
 				58CCA010224249A1004F3011 /* ConnectViewController.swift in Sources */,
@@ -561,6 +566,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58723E7A22A69DE6009837F5 /* Curve25519.swift in Sources */,
+				58BFA5CD22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */,
 				58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */,
 				58723E7922A69DE6009837F5 /* x25519.c in Sources */,
 			);

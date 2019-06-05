@@ -8,9 +8,6 @@
 
 import Foundation
 
-/// The application group identifier used for sharing application preferences between processes
-private let kApplicationGroupIdentifier = "group.net.mullvad.MullvadVPN"
-
 /// The UserDefaults keys used to store the application preferences
 private enum UserDefaultsKeys: String {
     case accountToken, accountExpiry
@@ -24,7 +21,7 @@ class UserDefaultsInteractor {
     /// The shared instance of UserDefaultsInteractor initialized with the application group
     /// preferences
     static let sharedApplicationGroupInteractor: UserDefaultsInteractor = {
-        let userDefaults = UserDefaults(suiteName: kApplicationGroupIdentifier)!
+        let userDefaults = UserDefaults(suiteName: ApplicationConfiguration.securityGroupIdentifier)!
 
         return UserDefaultsInteractor(userDefaults: userDefaults)
     }()
