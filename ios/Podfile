@@ -13,4 +13,7 @@ end
 
 target 'PacketTunnel' do
   use_frameworks!
+
+  pod 'ProcedureKit', '5.2.0'
+  pod 'ProcedureKit/Network', '5.2.0'
 end
