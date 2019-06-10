@@ -26,6 +26,12 @@
 		587425C12299833500CA2045 /* RootContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587425C02299833500CA2045 /* RootContainerViewController.swift */; };
 		58781CC622AE5F4B009B9D8E /* ProcedureKit+Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */; };
 		58781CC722AE602B009B9D8E /* ProcedureKit+Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */; };
+		58781CC922AE7CA8009B9D8E /* RelayConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */; };
+		58781CCE22AE8918009B9D8E /* RelayConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */; };
+		58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FFE443228C82A00036F391 /* UserDefaultsInteractor.swift */; };
+		58781CD222AFAC73009B9D8E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */; };
+		58781CD322AFB9EA009B9D8E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */; };
+		58781CD522AFBA39009B9D8E /* RelaySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD422AFBA39009B9D8E /* RelaySelector.swift */; };
 		587B08E0229433EB000E6F17 /* LoginState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587B08DF229433EB000E6F17 /* LoginState.swift */; };
 		587B08E2229460C1000E6F17 /* WebLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587B08E1229460C1000E6F17 /* WebLinks.swift */; };
 		587CBFE322807F530028DED3 /* UIColor+Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587CBFE222807F530028DED3 /* UIColor+Helpers.swift */; };
@@ -119,6 +125,9 @@
 		58723E7822A69DE6009837F5 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		587425C02299833500CA2045 /* RootContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerViewController.swift; sourceTree = "<group>"; };
 		58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcedureKit+Patches.swift"; sourceTree = "<group>"; };
+		58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayConstraint.swift; sourceTree = "<group>"; };
+		58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelConfiguration.swift; sourceTree = "<group>"; };
+		58781CD422AFBA39009B9D8E /* RelaySelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySelector.swift; sourceTree = "<group>"; };
 		587B08DF229433EB000E6F17 /* LoginState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginState.swift; sourceTree = "<group>"; };
 		587B08E1229460C1000E6F17 /* WebLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebLinks.swift; sourceTree = "<group>"; };
 		587CBFE222807F530028DED3 /* UIColor+Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Helpers.swift"; sourceTree = "<group>"; };
@@ -225,6 +234,7 @@
 				58F19E32228B383300C7710B /* AccountVerificationProcedure.swift */,
 				58CCA01722426713004F3011 /* AccountViewController.swift */,
 				58CE5E63224146200008646E /* AppDelegate.swift */,
+				58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */,
 				58CE5E6A224146210008646E /* Assets.xcassets */,
 				589AB4F6227B64450039131E /* BasicTableViewCell.swift */,
 				58CCA00F224249A1004F3011 /* ConnectViewController.swift */,
@@ -238,9 +248,14 @@
 				58CE5E65224146200008646E /* LoginViewController.swift */,
 				58CE5E67224146200008646E /* Main.storyboard */,
 				58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */,
+				58FBDAAA22A52DC500EB69A3 /* MullvadVPN-Bridging-Header.h */,
 				5866F39B2243B82D00168AE5 /* MullvadVPN.entitlements */,
 				58ADDB3F227B1E7100FAFEA7 /* Optional+Unwrap.swift */,
+				58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */,
+				58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */,
 				5888AD88227B18C40051EB06 /* RelayList.swift */,
+				58BFA5C522A7C97F00A6173D /* RelayListCache.swift */,
+				58781CD422AFBA39009B9D8E /* RelaySelector.swift */,
 				5888AD7E2279B6BF0051EB06 /* RelayStatusIndicatorView.swift */,
 				587425C02299833500CA2045 /* RootContainerViewController.swift */,
 				5867A51B2248F26A005513C0 /* SegueIdentifier.swift */,
@@ -253,16 +268,13 @@
 				58F19E34228C15BA00C7710B /* SpinnerActivityIndicatorView.swift */,
 				581CBCED229826FD00727D7F /* StaticTableViewDataSource.swift */,
 				5862805322428EF100F5A6E1 /* TranslucentButtonBlurView.swift */,
+				58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */,
 				587CBFE222807F530028DED3 /* UIColor+Helpers.swift */,
 				58CCA0152242560B004F3011 /* UIColor+Palette.swift */,
 				58FFE443228C82A00036F391 /* UserDefaultsInteractor.swift */,
 				581CBCE52296B97300727D7F /* ViewControllerIdentifier.swift */,
 				58535B84229E89E7004BCBBD /* WeakBox.swift */,
 				587B08E1229460C1000E6F17 /* WebLinks.swift */,
-				58FBDAAA22A52DC500EB69A3 /* MullvadVPN-Bridging-Header.h */,
-				58BFA5C522A7C97F00A6173D /* RelayListCache.swift */,
-				58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */,
-				58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */,
 			);
 			path = MullvadVPN;
 			sourceTree = "<group>";
@@ -551,6 +563,7 @@
 				581CBCEC2298041B00727D7F /* SettingsAppVersionCell.swift in Sources */,
 				587B08E2229460C1000E6F17 /* WebLinks.swift in Sources */,
 				58CCA01822426713004F3011 /* AccountViewController.swift in Sources */,
+				58781CC922AE7CA8009B9D8E /* RelayConstraint.swift in Sources */,
 				58ADDB3E227B1CD900FAFEA7 /* MullvadAPI.swift in Sources */,
 				587B08E0229433EB000E6F17 /* LoginState.swift in Sources */,
 				582BB1AF229566420055B6EF /* SettingsCell.swift in Sources */,
@@ -564,6 +577,7 @@
 				58CCA01222424D11004F3011 /* SettingsViewController.swift in Sources */,
 				58F19E33228B383300C7710B /* AccountVerificationProcedure.swift in Sources */,
 				589AB4F7227B64450039131E /* BasicTableViewCell.swift in Sources */,
+				58781CD222AFAC73009B9D8E /* TunnelConfiguration.swift in Sources */,
 				5888AD7F2279B6BF0051EB06 /* RelayStatusIndicatorView.swift in Sources */,
 				5867A51C2248F26A005513C0 /* SegueIdentifier.swift in Sources */,
 				58F19E31228B2AEB00C7710B /* JSONRequestProcedure.swift in Sources */,
@@ -587,10 +601,14 @@
 				58BFA5C322A7C93400A6173D /* RelayList.swift in Sources */,
 				58BFA5C122A7C92400A6173D /* JSONRequestProcedure.swift in Sources */,
 				58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */,
+				58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */,
 				58BFA5C722A7C97F00A6173D /* RelayListCache.swift in Sources */,
 				58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */,
 				58BFA5C422A7C94600A6173D /* AccountVerificationProcedure.swift in Sources */,
+				58781CCE22AE8918009B9D8E /* RelayConstraint.swift in Sources */,
+				58781CD322AFB9EA009B9D8E /* TunnelConfiguration.swift in Sources */,
 				58723E7922A69DE6009837F5 /* x25519.c in Sources */,
+				58781CD522AFBA39009B9D8E /* RelaySelector.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

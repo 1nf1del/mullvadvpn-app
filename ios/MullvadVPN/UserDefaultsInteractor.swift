@@ -10,7 +10,8 @@ import Foundation
 
 /// The UserDefaults keys used to store the application preferences
 private enum UserDefaultsKeys: String {
-    case accountToken, accountExpiry
+    case accountToken
+    case accountExpiry
 }
 
 /// The interactor class that provides a convenient interface for accessing the Mullvad VPN

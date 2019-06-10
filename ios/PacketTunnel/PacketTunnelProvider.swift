@@ -44,6 +44,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             return
         }
 
+        // TODO: do something with relay constraint
+        let tunnelConfiguration = TunnelConfiguration(with: tunnelProviderProtocol)
 
         let dnsSettings = NEDNSSettings(servers: ["10.0.0.1"])
         // All DNS queries must first go through the tunnel's DNS

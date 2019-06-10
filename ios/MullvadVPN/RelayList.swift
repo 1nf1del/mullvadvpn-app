@@ -29,6 +29,18 @@ struct RelayList: Codable {
         let ipv4AddrIn: String
         let includeInCountry: Bool
         let weight: Int32
+        let tunnels: Tunnels?
+    }
+
+    struct Tunnels: Codable {
+        let wireguard: [WireguardTunnel]?
+    }
+
+    struct WireguardTunnel: Codable {
+        let ipv4Gateway: String
+        let ipv6Gateway: String
+        let publicKey: String
+        let portRanges: [ClosedRange<Int>]
     }
 
     let countries: [Country]

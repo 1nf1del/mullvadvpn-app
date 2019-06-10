@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import os.log
 
 class ConnectViewController: UIViewController, RootContainment {
 
@@ -26,7 +27,20 @@ class ConnectViewController: UIViewController, RootContainment {
     // MARK: - Actions
 
     @IBAction func unwindFromSelectLocation(segue: UIStoryboardSegue) {
+        guard let selectLocationController = segue.source as? SelectLocationController else { return }
+        guard let selectedItem = selectLocationController.selectedItem else { return }
 
+        let relayLocation = selectedItem.intoRelayLocation()
+        let relayConstraint = RelayConstraint(location: .only(relayLocation))
+
+        TunnelConfiguration.updateRelayConstraint(relayConstraint) { (result) in
+            switch result {
+            case .success:
+                os_log(.info, "Updated the relay constraint: %{public}s", String(describing: relayConstraint))
+            case .failure(let error):
+                os_log(.error, "Failed to update the relay constraint: %s", error.localizedDescription)
+            }
+        }
     }
 
 }
