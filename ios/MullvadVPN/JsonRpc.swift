@@ -8,25 +8,28 @@
 
 import Foundation
 
-typealias JsonRpcRequestId = String
-struct JsonRpcRequest<T: Encodable>: Encodable {
+struct AnyEncodable: Encodable {
+    let value: Encodable
+
+    init(_ value: Encodable) {
+        self.value = value
+    }
+
+    func encode(to encoder: Encoder) throws {
+        try value.encode(to: encoder)
+    }
+}
+
+struct JsonRpcRequest: Encodable {
     let version = "2.0"
-    let id: JsonRpcRequestId = UUID().uuidString
+    let id = UUID().uuidString
     let method: String
-    let params: [T]
+    let params: [AnyEncodable]
 
     fileprivate enum CodingKeys: String, CodingKey {
         case version = "jsonrpc", id, method, params
     }
 }
-
-extension JsonRpcRequest where T == NoData {
-    init(method: String) {
-        self.init(method: method, params: [])
-    }
-}
-
-struct NoData: Encodable {}
 
 class JsonRpcResponseError: Error, Decodable {
     let code: Int
@@ -50,7 +53,7 @@ class JsonRpcResponseError: Error, Decodable {
 
 struct JsonRpcResponse<T: Decodable>: Decodable {
     let version: String
-    let id: JsonRpcRequestId
+    let id: String
     let result: Result<T, JsonRpcResponseError>
 
     private enum CodingKeys: String, CodingKey {

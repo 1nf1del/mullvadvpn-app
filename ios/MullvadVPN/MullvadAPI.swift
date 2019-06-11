@@ -15,7 +15,8 @@ class MullvadAPI {
 
     class func getRelayList() -> JSONRequestProcedure<Void, JsonRpcResponse<RelayList>> {
         return JSONRequestProcedure(requestBuilder: {
-            try makeURLRequest(method: "POST", rpcRequest: JsonRpcRequest(method: "relay_list_v2"))
+            try makeURLRequest(method: "POST",
+                               rpcRequest: JsonRpcRequest(method: "relay_list_v2", params: []))
         })
     }
 
@@ -23,7 +24,7 @@ class MullvadAPI {
         return JSONRequestProcedure(input: accountToken, requestBuilder: {
             try makeURLRequest(
                 method: "POST",
-                rpcRequest: JsonRpcRequest(method: "get_expiry", params: [$0])
+                rpcRequest: JsonRpcRequest(method: "get_expiry", params: [AnyEncodable($0)])
             )
         })
     }
@@ -32,7 +33,7 @@ class MullvadAPI {
         return AccountVerificationProcedure(accountToken: accountToken)
     }
 
-    private class func makeURLRequest<T: Encodable>(method: String, rpcRequest: JsonRpcRequest<T>) throws -> URLRequest {
+    private class func makeURLRequest(method: String, rpcRequest: JsonRpcRequest) throws -> URLRequest {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .iso8601

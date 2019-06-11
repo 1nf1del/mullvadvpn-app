@@ -28,6 +28,7 @@ final class JSONRequestProcedure<Input, Output: Decodable>: GroupProcedure, Inpu
 
         let payloadParsing = DecodeJSONProcedure<Output>(
             dateDecodingStrategy: .iso8601,
+            dataDecodingStrategy: .base64,
             keyDecodingStrategy: .convertFromSnakeCase
             ).injectPayload(fromNetwork: networkRequest)
 
