@@ -13,6 +13,16 @@ private let kMullvadAPIURL = URL(string: "https://api.mullvad.net/rpc/")!
 
 class MullvadAPI {
 
+    struct WireguardKeyRequest: Codable {
+        var accountToken: String
+        var publicKey: Data
+    }
+
+    struct WireguardAssociatedAddresses: Codable {
+        let ipv4Address: String
+        let ipv6Address: String
+    }
+
     class func getRelayList() -> JSONRequestProcedure<Void, JsonRpcResponse<RelayList>> {
         return JSONRequestProcedure(requestBuilder: {
             try makeURLRequest(method: "POST",
@@ -33,10 +43,31 @@ class MullvadAPI {
         return AccountVerificationProcedure(accountToken: accountToken)
     }
 
+    class func pushWireguardKey(_ pushRequest: WireguardKeyRequest? = nil) -> JSONRequestProcedure<WireguardKeyRequest, JsonRpcResponse<WireguardAssociatedAddresses>> {
+        return JSONRequestProcedure(input: pushRequest, requestBuilder: { (input) -> URLRequest in
+            let rpcRequest = JsonRpcRequest(method: "push_wg_key", params: [
+                AnyEncodable(input.accountToken),
+                AnyEncodable(input.publicKey)
+                ])
+            return try makeURLRequest(method: "POST", rpcRequest: rpcRequest)
+        })
+    }
+
+    class func checkWireguardKey(_ pushRequest: WireguardKeyRequest? = nil) -> JSONRequestProcedure<WireguardKeyRequest, JsonRpcResponse<Bool>> {
+        return JSONRequestProcedure(input: pushRequest, requestBuilder: { (input) -> URLRequest in
+            let rpcRequest = JsonRpcRequest(method: "check_wg_key", params: [
+                AnyEncodable(input.accountToken),
+                AnyEncodable(input.publicKey)
+                ])
+            return try makeURLRequest(method: "POST", rpcRequest: rpcRequest)
+        })
+    }
+
     private class func makeURLRequest(method: String, rpcRequest: JsonRpcRequest) throws -> URLRequest {
         let encoder = JSONEncoder()
         encoder.keyEncodingStrategy = .convertToSnakeCase
         encoder.dateEncodingStrategy = .iso8601
+        encoder.dataEncodingStrategy = .base64
 
         var urlRequest = URLRequest(url: kMullvadAPIURL)
         urlRequest.httpMethod = method
