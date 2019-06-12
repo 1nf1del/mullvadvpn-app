@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Network
 
 class RelaySelector {
 
@@ -34,7 +35,7 @@ class RelaySelector {
         }
     }
 
-    func evaluate(with constraint: RelayConstraint) -> RelayList.WireguardTunnel? {
+    func evaluate(with constraint: RelayConstraint) -> MullvadEndpoint? {
         // Stub implementation
 
         for country in relayList.countries {
@@ -45,7 +46,24 @@ class RelaySelector {
                     }
 
                     for wireguardTunnel in wireguardTunnels {
-                        return wireguardTunnel
+                        guard let randomPort = wireguardTunnel.portRanges
+                            .randomElement()? // random range
+                            .randomElement() // random port
+                            else { continue }
+
+                        let relayEndpoint: NWEndpoint = .hostPort(
+                            host: .ipv4(relay.ipv4AddrIn),
+                            port: NWEndpoint.Port(integerLiteral: randomPort)
+                        )
+
+                        let evaluation = MullvadEndpoint(
+                            endpoint: relayEndpoint,
+                            ipv4Gateway: wireguardTunnel.ipv4Gateway,
+                            ipv6Gateway: wireguardTunnel.ipv6Gateway,
+                            publicKey: wireguardTunnel.publicKey
+                        )
+
+                        return evaluation
                     }
                 }
             }
