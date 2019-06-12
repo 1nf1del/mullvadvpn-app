@@ -8,6 +8,7 @@
 //
 
 import Foundation
+import Network
 
 struct RelayList: Codable {
     struct Country: Codable {
@@ -26,7 +27,7 @@ struct RelayList: Codable {
 
     struct Hostname: Codable {
         let hostname: String
-        let ipv4AddrIn: String
+        let ipv4AddrIn: IPv4Address
         let includeInCountry: Bool
         let weight: Int32
         let tunnels: Tunnels?
@@ -37,10 +38,10 @@ struct RelayList: Codable {
     }
 
     struct WireguardTunnel: Codable {
-        let ipv4Gateway: String
-        let ipv6Gateway: String
+        let ipv4Gateway: IPv4Address
+        let ipv6Gateway: IPv6Address
         let publicKey: String
-        let portRanges: [ClosedRange<Int>]
+        let portRanges: [ClosedRange<UInt16>]
     }
 
     let countries: [Country]
