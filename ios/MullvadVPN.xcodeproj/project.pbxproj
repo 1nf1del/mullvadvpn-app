@@ -18,6 +18,8 @@
 		582BB1B52295780F0055B6EF /* AccountExpiry.swift in Sources */ = {isa = PBXBuildFile; fileRef = 582BB1B42295780F0055B6EF /* AccountExpiry.swift */; };
 		5840250122B1124600E4CFEC /* IpAddress+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840250022B1124600E4CFEC /* IpAddress+Codable.swift */; };
 		5840250222B1124600E4CFEC /* IpAddress+Codable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840250022B1124600E4CFEC /* IpAddress+Codable.swift */; };
+		5840250422B11AB700E4CFEC /* MullvadEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840250322B11AB700E4CFEC /* MullvadEndpoint.swift */; };
+		5840250522B11AB700E4CFEC /* MullvadEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5840250322B11AB700E4CFEC /* MullvadEndpoint.swift */; };
 		58461AD3228D622E00B72ECB /* Account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58461AD2228D622E00B72ECB /* Account.swift */; };
 		58535B85229E89E7004BCBBD /* WeakBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58535B84229E89E7004BCBBD /* WeakBox.swift */; };
 		5862805422428EF100F5A6E1 /* TranslucentButtonBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5862805322428EF100F5A6E1 /* TranslucentButtonBlurView.swift */; };
@@ -117,6 +119,7 @@
 		582BB1B2229574F40055B6EF /* SettingsAccountCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsAccountCell.swift; sourceTree = "<group>"; };
 		582BB1B42295780F0055B6EF /* AccountExpiry.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountExpiry.swift; sourceTree = "<group>"; };
 		5840250022B1124600E4CFEC /* IpAddress+Codable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "IpAddress+Codable.swift"; sourceTree = "<group>"; };
+		5840250322B11AB700E4CFEC /* MullvadEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MullvadEndpoint.swift; sourceTree = "<group>"; };
 		58461AD2228D622E00B72ECB /* Account.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Account.swift; sourceTree = "<group>"; };
 		58535B84229E89E7004BCBBD /* WeakBox.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeakBox.swift; sourceTree = "<group>"; };
 		5862805322428EF100F5A6E1 /* TranslucentButtonBlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslucentButtonBlurView.swift; sourceTree = "<group>"; };
@@ -252,13 +255,14 @@
 				58CE5E65224146200008646E /* LoginViewController.swift */,
 				58CE5E67224146200008646E /* Main.storyboard */,
 				58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */,
+				5840250322B11AB700E4CFEC /* MullvadEndpoint.swift */,
 				58FBDAAA22A52DC500EB69A3 /* MullvadVPN-Bridging-Header.h */,
 				5866F39B2243B82D00168AE5 /* MullvadVPN.entitlements */,
 				58ADDB3F227B1E7100FAFEA7 /* Optional+Unwrap.swift */,
 				58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */,
+				58BFA5C522A7C97F00A6173D /* RelayCache.swift */,
 				58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */,
 				5888AD88227B18C40051EB06 /* RelayList.swift */,
-				58BFA5C522A7C97F00A6173D /* RelayCache.swift */,
 				58781CD422AFBA39009B9D8E /* RelaySelector.swift */,
 				5888AD7E2279B6BF0051EB06 /* RelayStatusIndicatorView.swift */,
 				587425C02299833500CA2045 /* RootContainerViewController.swift */,
@@ -567,6 +571,7 @@
 				587CBFE322807F530028DED3 /* UIColor+Helpers.swift in Sources */,
 				581CBCEC2298041B00727D7F /* SettingsAppVersionCell.swift in Sources */,
 				587B08E2229460C1000E6F17 /* WebLinks.swift in Sources */,
+				5840250422B11AB700E4CFEC /* MullvadEndpoint.swift in Sources */,
 				58CCA01822426713004F3011 /* AccountViewController.swift in Sources */,
 				58781CC922AE7CA8009B9D8E /* RelayConstraint.swift in Sources */,
 				58ADDB3E227B1CD900FAFEA7 /* MullvadAPI.swift in Sources */,
@@ -608,6 +613,7 @@
 				5840250222B1124600E4CFEC /* IpAddress+Codable.swift in Sources */,
 				58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */,
 				58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */,
+				5840250522B11AB700E4CFEC /* MullvadEndpoint.swift in Sources */,
 				58BFA5C722A7C97F00A6173D /* RelayCache.swift in Sources */,
 				58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */,
 				58BFA5C422A7C94600A6173D /* AccountVerificationProcedure.swift in Sources */,
