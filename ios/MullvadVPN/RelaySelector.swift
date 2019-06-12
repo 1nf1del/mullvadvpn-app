@@ -17,16 +17,20 @@ class RelaySelector {
     }
 
     class func loadedFromRelayCache(completion: @escaping (Result<RelaySelector, Error>) -> Void) {
-        let cacheFileURL = RelayListCache.defaultCacheFileURL!
+        do {
+            let relayCache = try RelayCache.withDefaultLocation()
 
-        RelayListCache.read(cacheFileURL: cacheFileURL) { (result) in
-            switch result {
-            case .success(let cache):
-                completion(.success(RelaySelector(relayList: cache.relayList)))
+            relayCache.read { (result) in
+                switch result {
+                case .success(let cache):
+                    completion(.success(RelaySelector(relayList: cache.relayList)))
 
-            case .failure(let error):
-                completion(.failure(error))
+                case .failure(let error):
+                    completion(.failure(error))
+                }
             }
+        } catch {
+            completion(.failure(error))
         }
     }
 
