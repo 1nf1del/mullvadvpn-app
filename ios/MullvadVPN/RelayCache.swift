@@ -47,6 +47,8 @@ class RelayCache {
         return RelayCache(cacheFileURL: cacheFileURL)
     }
 
+    /// Read the relay cache and update it from remote if needed.
+    /// The completion handler is called on a background queue
     func read(completion: @escaping (Result<CachedRelayList, Swift.Error>) -> Void) {
         let cacheRequestProcedure = BlockProcedure { [weak self] (blockProcedure) in
             guard let self = self else {

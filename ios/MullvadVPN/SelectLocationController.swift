@@ -7,18 +7,16 @@
 //
 
 import UIKit
-import ProcedureKit
 import os.log
 
 private let cellIdentifier = "Cell"
 
 class SelectLocationController: UITableViewController {
 
+    private let relayCache = try! RelayCache.withDefaultLocation()
     private var relayList: RelayList?
     private var expandedItems = [RelayListDataSourceItem]()
     private var displayedItems = [RelayListDataSourceItem]()
-
-    private let procedureQueue = ProcedureQueue()
 
     var selectedItem: RelayListDataSourceItem?
 
@@ -81,26 +79,21 @@ class SelectLocationController: UITableViewController {
     // MARK: - Relay list handling
 
     private func loadRelayList() {
-        let procedure = MullvadAPI.getRelayList()
+        relayCache.read { [weak self] (result) in
+            switch result {
+            case .success(let cachedRelays):
+                DispatchQueue.main.async {
+                    self?.didReceiveRelayList(cachedRelays.relayList)
+                }
 
-        procedure.addDidFinishBlockObserver(synchronizedWith: DispatchQueue.main) { [weak self] (procedure, error) in
-            guard let response = procedure.output.success else {
-                os_log(.error, "Relay list network error: %{public}s", error?.localizedDescription ?? "(null)")
-                return
+            case .failure(let error):
+                os_log(.error, "Failed to read the relay cache: %{public}s", error.localizedDescription)
             }
-
-            self?.didReceiveRelayList(response)
         }
-
-        procedureQueue.addOperation(procedure)
     }
 
-    private func didReceiveRelayList(_ response: JsonRpcResponse<RelayList>) {
-        do {
-            relayList = try response.result.get()
-        } catch {
-            os_log(.error, "Relay list server error: %{public}s", error.localizedDescription)
-        }
+    private func didReceiveRelayList(_ relayList: RelayList) {
+        self.relayList = relayList
 
         updateDisplayedItems()
         tableView.reloadData()
