@@ -51,19 +51,16 @@ class RelaySelector {
                             .randomElement() // random port
                             else { continue }
 
-                        let relayEndpoint: NWEndpoint = .hostPort(
-                            host: .ipv4(relay.ipv4AddrIn),
-                            port: NWEndpoint.Port(integerLiteral: randomPort)
-                        )
+                        let relayEndpoint = RelayEndpoint(
+                            address: relay.ipv4AddrIn,
+                            port: randomPort)
 
-                        let evaluation = MullvadEndpoint(
-                            endpoint: relayEndpoint,
+                        return MullvadEndpoint(
+                            relay: relayEndpoint,
                             ipv4Gateway: wireguardTunnel.ipv4Gateway,
                             ipv6Gateway: wireguardTunnel.ipv6Gateway,
                             publicKey: wireguardTunnel.publicKey
                         )
-
-                        return evaluation
                     }
                 }
             }

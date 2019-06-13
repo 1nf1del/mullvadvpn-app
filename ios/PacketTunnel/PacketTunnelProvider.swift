@@ -13,6 +13,8 @@ import ProcedureKit
 import os.log
 
 enum PacketTunnelProviderError: Error {
+    case readRelayCache
+    case noRelaySatisfyingConstraint
     case invalidProtocolConfiguration
     case setNetworkSettings
     case fileDescriptorNotFound
@@ -35,27 +37,19 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         networkMonitor.cancel()
     }
 
-    override func startTunnel(options: [String : NSObject]?, completionHandler: @escaping (Error?) -> Void) {
-        os_log(.info, "Starting the tunnel")
+    private func configureTunnel(privateKey: Data,
+                                 mullvadEndpoint: MullvadEndpoint,
+                                 interfaceAddresses: WireguardAssociatedAddresses,
+                                 completionHandler: @escaping (Error?) -> Void)
+    {
+        let packetTunnelConfigGenerator = PacketTunnelSettingsGenerator(
+            privateKey: privateKey,
+            mullvadEndpoint: mullvadEndpoint,
+            interfaceAddresses: interfaceAddresses)
 
-        guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol else {
-            os_log(.error, "Failed to start the tunnel because of invalid protocol configuration")
-            completionHandler(PacketTunnelProviderError.invalidProtocolConfiguration)
-            return
-        }
+        let networkSettings = packetTunnelConfigGenerator.networkSettings()
 
-        // TODO: do something with relay constraint
-        let tunnelConfiguration = TunnelConfiguration(with: tunnelProviderProtocol)
-
-        let dnsSettings = NEDNSSettings(servers: ["10.0.0.1"])
-        // All DNS queries must first go through the tunnel's DNS
-        dnsSettings.matchDomains = [""]
-
-        let tunnelNetworkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "127.0.0.1")
-        tunnelNetworkSettings.dnsSettings = dnsSettings
-        tunnelNetworkSettings.mtu = 1280
-
-        setTunnelNetworkSettings(tunnelNetworkSettings) { (error) in
+        setTunnelNetworkSettings(networkSettings) { (error) in
             if let error = error {
                 os_log(.error, "Cannot set network settings: %{public}s", error.localizedDescription)
 
@@ -75,7 +69,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 os_log(.info, "Tunnel interface is %{public}s", self.tunnelInterfaceName ?? "unknown")
 
                 // TODO: Generate configuration
-//                let handle = wgTurnOn(gostring_t, fileDescriptor)
+                //                let handle = wgTurnOn(gostring_t, fileDescriptor)
                 let handle: Int32 = 0
                 if handle < 0 {
                     os_log(.error, "Failed to start the Wireguard backend, wgTurnOn returned %{public}d", handle)
@@ -87,6 +81,46 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
                 self.handle = handle
 
                 completionHandler(nil)
+            }
+        }
+    }
+
+    override func startTunnel(options: [String : NSObject]?, completionHandler: @escaping (Error?) -> Void) {
+        os_log(.info, "Starting the tunnel")
+
+        guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol else {
+            os_log(.error, "Failed to start the tunnel because of invalid protocol configuration")
+            completionHandler(PacketTunnelProviderError.invalidProtocolConfiguration)
+            return
+        }
+
+        let tunnelConfiguration = TunnelConfiguration(with: tunnelProviderProtocol)
+
+        RelaySelector.loadedFromRelayCache { (result) in
+            switch result {
+            case .success(let relaySelector):
+                if let mullvadEnpoint = relaySelector.evaluate(with: tunnelConfiguration.relayConstraint) {
+                    // TODO: replace with the real IPs returned by master
+                    let interfaceAddresses = WireguardAssociatedAddresses(
+                        ipv4Address: IPv4Address("127.0.0.1")!,
+                        ipv6Address: IPv6Address("::1")!)
+
+                    // TODO: replace with the real private key
+                    let privateKey = Data(count: 1337)
+
+                    self.configureTunnel(
+                        privateKey: privateKey,
+                        mullvadEndpoint: mullvadEnpoint,
+                        interfaceAddresses: interfaceAddresses,
+                        completionHandler: completionHandler)
+                } else {
+                    completionHandler(PacketTunnelProviderError.noRelaySatisfyingConstraint)
+                }
+
+            case .failure(let error):
+                os_log(.error, "Failed to initialize the relay selector: %s",
+                       error.localizedDescription)
+                completionHandler(PacketTunnelProviderError.readRelayCache)
             }
         }
     }

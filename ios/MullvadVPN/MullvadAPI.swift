@@ -7,6 +7,7 @@
 //
 
 import Foundation
+import Network
 import ProcedureKit
 
 private let kMullvadAPIURL = URL(string: "https://api.mullvad.net/rpc/")!
@@ -16,11 +17,6 @@ class MullvadAPI {
     struct WireguardKeyRequest: Codable {
         var accountToken: String
         var publicKey: Data
-    }
-
-    struct WireguardAssociatedAddresses: Codable {
-        let ipv4Address: String
-        let ipv6Address: String
     }
 
     class func getRelayList() -> JSONRequestProcedure<Void, JsonRpcResponse<RelayList>> {
