@@ -24,6 +24,8 @@
 		58535B85229E89E7004BCBBD /* WeakBox.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58535B84229E89E7004BCBBD /* WeakBox.swift */; };
 		5862805422428EF100F5A6E1 /* TranslucentButtonBlurView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5862805322428EF100F5A6E1 /* TranslucentButtonBlurView.swift */; };
 		5867A51C2248F26A005513C0 /* SegueIdentifier.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5867A51B2248F26A005513C0 /* SegueIdentifier.swift */; };
+		586BD68322B7BBD800BB7F9F /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 586BD68222B7BBD800BB7F9F /* NetworkExtension.framework */; };
+		586BD68422B7BBE400BB7F9F /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 586BD68222B7BBD800BB7F9F /* NetworkExtension.framework */; };
 		58723E7522A54CB2009837F5 /* libwg-go.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 58723E7422A54C63009837F5 /* libwg-go.a */; };
 		58723E7922A69DE6009837F5 /* x25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 58723E7622A69DE6009837F5 /* x25519.c */; };
 		58723E7A22A69DE6009837F5 /* Curve25519.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58723E7722A69DE6009837F5 /* Curve25519.swift */; };
@@ -53,8 +55,6 @@
 		58B8743522B25DE100015324 /* RelayEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743422B25DE100015324 /* RelayEndpoint.swift */; };
 		58B8743622B25DE300015324 /* RelayEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743422B25DE100015324 /* RelayEndpoint.swift */; };
 		58B8743B22B788D200015324 /* PacketTunnelSettingsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743722B25EAB00015324 /* PacketTunnelSettingsGenerator.swift */; };
-		58B8743D22B78AC400015324 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B8743C22B78AC400015324 /* NetworkExtension.framework */; };
-		58B8743E22B78AD000015324 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B8743C22B78AC400015324 /* NetworkExtension.framework */; };
 		58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */; };
 		58BFA5C122A7C92400A6173D /* JSONRequestProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E30228B2AEB00C7710B /* JSONRequestProcedure.swift */; };
 		58BFA5C222A7C92900A6173D /* JsonRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3B227B1BD200FAFEA7 /* JsonRpc.swift */; };
@@ -132,6 +132,7 @@
 		5862805322428EF100F5A6E1 /* TranslucentButtonBlurView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TranslucentButtonBlurView.swift; sourceTree = "<group>"; };
 		5866F39B2243B82D00168AE5 /* MullvadVPN.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MullvadVPN.entitlements; sourceTree = "<group>"; };
 		5867A51B2248F26A005513C0 /* SegueIdentifier.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SegueIdentifier.swift; sourceTree = "<group>"; };
+		586BD68222B7BBD800BB7F9F /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		58723E7422A54C63009837F5 /* libwg-go.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; path = "libwg-go.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		58723E7622A69DE6009837F5 /* x25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = x25519.c; sourceTree = "<group>"; };
 		58723E7722A69DE6009837F5 /* Curve25519.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Curve25519.swift; sourceTree = "<group>"; };
@@ -156,7 +157,6 @@
 		58B8743122B25A7600015324 /* WireguardAssociatedAddresses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardAssociatedAddresses.swift; sourceTree = "<group>"; };
 		58B8743422B25DE100015324 /* RelayEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayEndpoint.swift; sourceTree = "<group>"; };
 		58B8743722B25EAB00015324 /* PacketTunnelSettingsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelSettingsGenerator.swift; sourceTree = "<group>"; };
-		58B8743C22B78AC400015324 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		58BFA5C522A7C97F00A6173D /* RelayCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayCache.swift; sourceTree = "<group>"; };
 		58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationConfiguration.swift; sourceTree = "<group>"; };
 		58C3A4B122456F1A00340BDB /* AccountInputGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInputGroupView.swift; sourceTree = "<group>"; };
@@ -195,7 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08A905C56DDB0A0A887BB5F5 /* Pods_MullvadVPN.framework in Frameworks */,
-				58B8743E22B78AD000015324 /* NetworkExtension.framework in Frameworks */,
+				586BD68422B7BBE400BB7F9F /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -204,7 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				543203592C79FAD36BC1E700 /* Pods_PacketTunnel.framework in Frameworks */,
-				58B8743D22B78AC400015324 /* NetworkExtension.framework in Frameworks */,
+				586BD68322B7BBD800BB7F9F /* NetworkExtension.framework in Frameworks */,
 				58723E7522A54CB2009837F5 /* libwg-go.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -215,7 +215,7 @@
 		0E15C74FDCF763609B367486 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				58B8743C22B78AC400015324 /* NetworkExtension.framework */,
+				586BD68222B7BBD800BB7F9F /* NetworkExtension.framework */,
 				3F506AB938C45AEB812886B4 /* Pods_MullvadVPN.framework */,
 				A931E0F6F380B4B3FD45D987 /* Pods_PacketTunnel.framework */,
 			);
@@ -864,6 +864,7 @@
 				CODE_SIGN_ENTITLEMENTS = PacketTunnel/PacketTunnel.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G7CDBEG477;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
@@ -888,6 +889,7 @@
 				CODE_SIGN_ENTITLEMENTS = PacketTunnel/PacketTunnel.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = G7CDBEG477;
+				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = PacketTunnel/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
