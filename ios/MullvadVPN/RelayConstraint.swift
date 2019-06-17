@@ -51,11 +51,20 @@ enum RelayLocation: Codable, CustomStringConvertible {
     var description: String {
         switch self {
         case .country(let country):
-            return country
+            return String(
+                format: NSLocalizedString("country %@", tableName: "RelayConstraint", comment: ""),
+                country)
+
         case .city(let country, let city):
-            return "(\(country), \(city))"
+            return String(
+                format: NSLocalizedString("city %@, %@", tableName: "RelayConstraint", comment: ""),
+                city, country)
+
         case .hostname(let country, let city, let host):
-            return "(\(country), \(city), \(host))"
+            return String(
+                format: NSLocalizedString(
+                    "city %@, %@, hostname %@", tableName: "RelayConstraint", comment: ""),
+                city, country, host)
         }
     }
 
@@ -95,6 +104,19 @@ enum RelayLocation: Codable, CustomStringConvertible {
 
 }
 
-struct RelayConstraint: Codable {
+struct RelayConstraint: Codable, CustomStringConvertible {
     var location: RelayCondition<RelayLocation> = .any
+
+    var description: String {
+        switch location {
+        case .any:
+            return NSLocalizedString("any location", tableName: "RelayConstraint", comment: "")
+        case .only(let only):
+            return String(describing: only)
+        }
+    }
+
+    static var `default`: RelayConstraint {
+        return RelayConstraint(location: .any)
+    }
 }

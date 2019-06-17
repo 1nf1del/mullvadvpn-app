@@ -33,8 +33,8 @@
 		58781CC922AE7CA8009B9D8E /* RelayConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */; };
 		58781CCE22AE8918009B9D8E /* RelayConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */; };
 		58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FFE443228C82A00036F391 /* UserDefaultsInteractor.swift */; };
-		58781CD222AFAC73009B9D8E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */; };
-		58781CD322AFB9EA009B9D8E /* TunnelConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */; };
+		58781CD222AFAC73009B9D8E /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelsManager.swift */; };
+		58781CD322AFB9EA009B9D8E /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelsManager.swift */; };
 		58781CD522AFBA39009B9D8E /* RelaySelector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD422AFBA39009B9D8E /* RelaySelector.swift */; };
 		587B08E0229433EB000E6F17 /* LoginState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587B08DF229433EB000E6F17 /* LoginState.swift */; };
 		587B08E2229460C1000E6F17 /* WebLinks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587B08E1229460C1000E6F17 /* WebLinks.swift */; };
@@ -52,7 +52,9 @@
 		58B8743322B25A7700015324 /* WireguardAssociatedAddresses.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743122B25A7600015324 /* WireguardAssociatedAddresses.swift */; };
 		58B8743522B25DE100015324 /* RelayEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743422B25DE100015324 /* RelayEndpoint.swift */; };
 		58B8743622B25DE300015324 /* RelayEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743422B25DE100015324 /* RelayEndpoint.swift */; };
-		58B8743822B25EAB00015324 /* PacketTunnelSettingsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743722B25EAB00015324 /* PacketTunnelSettingsGenerator.swift */; };
+		58B8743B22B788D200015324 /* PacketTunnelSettingsGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58B8743722B25EAB00015324 /* PacketTunnelSettingsGenerator.swift */; };
+		58B8743D22B78AC400015324 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B8743C22B78AC400015324 /* NetworkExtension.framework */; };
+		58B8743E22B78AD000015324 /* NetworkExtension.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 58B8743C22B78AC400015324 /* NetworkExtension.framework */; };
 		58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3D227B1CD900FAFEA7 /* MullvadAPI.swift */; };
 		58BFA5C122A7C92400A6173D /* JSONRequestProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E30228B2AEB00C7710B /* JSONRequestProcedure.swift */; };
 		58BFA5C222A7C92900A6173D /* JsonRpc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58ADDB3B227B1BD200FAFEA7 /* JsonRpc.swift */; };
@@ -137,7 +139,7 @@
 		587425C02299833500CA2045 /* RootContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerViewController.swift; sourceTree = "<group>"; };
 		58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcedureKit+Patches.swift"; sourceTree = "<group>"; };
 		58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayConstraint.swift; sourceTree = "<group>"; };
-		58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelConfiguration.swift; sourceTree = "<group>"; };
+		58781CD122AFAC73009B9D8E /* TunnelsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsManager.swift; sourceTree = "<group>"; };
 		58781CD422AFBA39009B9D8E /* RelaySelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySelector.swift; sourceTree = "<group>"; };
 		587B08DF229433EB000E6F17 /* LoginState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginState.swift; sourceTree = "<group>"; };
 		587B08E1229460C1000E6F17 /* WebLinks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WebLinks.swift; sourceTree = "<group>"; };
@@ -154,6 +156,7 @@
 		58B8743122B25A7600015324 /* WireguardAssociatedAddresses.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardAssociatedAddresses.swift; sourceTree = "<group>"; };
 		58B8743422B25DE100015324 /* RelayEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayEndpoint.swift; sourceTree = "<group>"; };
 		58B8743722B25EAB00015324 /* PacketTunnelSettingsGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelSettingsGenerator.swift; sourceTree = "<group>"; };
+		58B8743C22B78AC400015324 /* NetworkExtension.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = NetworkExtension.framework; path = System/Library/Frameworks/NetworkExtension.framework; sourceTree = SDKROOT; };
 		58BFA5C522A7C97F00A6173D /* RelayCache.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayCache.swift; sourceTree = "<group>"; };
 		58BFA5CB22A7CE1F00A6173D /* ApplicationConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ApplicationConfiguration.swift; sourceTree = "<group>"; };
 		58C3A4B122456F1A00340BDB /* AccountInputGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountInputGroupView.swift; sourceTree = "<group>"; };
@@ -192,6 +195,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				08A905C56DDB0A0A887BB5F5 /* Pods_MullvadVPN.framework in Frameworks */,
+				58B8743E22B78AD000015324 /* NetworkExtension.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -200,6 +204,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				543203592C79FAD36BC1E700 /* Pods_PacketTunnel.framework in Frameworks */,
+				58B8743D22B78AC400015324 /* NetworkExtension.framework in Frameworks */,
 				58723E7522A54CB2009837F5 /* libwg-go.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -210,6 +215,7 @@
 		0E15C74FDCF763609B367486 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				58B8743C22B78AC400015324 /* NetworkExtension.framework */,
 				3F506AB938C45AEB812886B4 /* Pods_MullvadVPN.framework */,
 				A931E0F6F380B4B3FD45D987 /* Pods_PacketTunnel.framework */,
 			);
@@ -285,7 +291,7 @@
 				58F19E34228C15BA00C7710B /* SpinnerActivityIndicatorView.swift */,
 				581CBCED229826FD00727D7F /* StaticTableViewDataSource.swift */,
 				5862805322428EF100F5A6E1 /* TranslucentButtonBlurView.swift */,
-				58781CD122AFAC73009B9D8E /* TunnelConfiguration.swift */,
+				58781CD122AFAC73009B9D8E /* TunnelsManager.swift */,
 				587CBFE222807F530028DED3 /* UIColor+Helpers.swift */,
 				58CCA0152242560B004F3011 /* UIColor+Palette.swift */,
 				58FFE443228C82A00036F391 /* UserDefaultsInteractor.swift */,
@@ -402,11 +408,19 @@
 							com.apple.ApplicationGroups.iOS = {
 								enabled = 1;
 							};
+							com.apple.NetworkExtensions.iOS = {
+								enabled = 1;
+							};
 						};
 					};
 					58CE5E78224146470008646E = {
 						CreatedOnToolsVersion = 10.0;
 						LastSwiftMigration = 1020;
+						SystemCapabilities = {
+							com.apple.NetworkExtensions.iOS = {
+								enabled = 1;
+							};
+						};
 					};
 					58FBDA9722A519BC00EB69A3 = {
 						CreatedOnToolsVersion = 10.2.1;
@@ -600,7 +614,7 @@
 				58CCA01222424D11004F3011 /* SettingsViewController.swift in Sources */,
 				58F19E33228B383300C7710B /* AccountVerificationProcedure.swift in Sources */,
 				589AB4F7227B64450039131E /* BasicTableViewCell.swift in Sources */,
-				58781CD222AFAC73009B9D8E /* TunnelConfiguration.swift in Sources */,
+				58781CD222AFAC73009B9D8E /* TunnelsManager.swift in Sources */,
 				5888AD7F2279B6BF0051EB06 /* RelayStatusIndicatorView.swift in Sources */,
 				5867A51C2248F26A005513C0 /* SegueIdentifier.swift in Sources */,
 				58F19E31228B2AEB00C7710B /* JSONRequestProcedure.swift in Sources */,
@@ -625,6 +639,7 @@
 				58BFA5C122A7C92400A6173D /* JSONRequestProcedure.swift in Sources */,
 				5840250222B1124600E4CFEC /* IpAddress+Codable.swift in Sources */,
 				58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */,
+				58B8743B22B788D200015324 /* PacketTunnelSettingsGenerator.swift in Sources */,
 				58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */,
 				5840250522B11AB700E4CFEC /* MullvadEndpoint.swift in Sources */,
 				58BFA5C722A7C97F00A6173D /* RelayCache.swift in Sources */,
@@ -632,8 +647,7 @@
 				58BFA5C422A7C94600A6173D /* AccountVerificationProcedure.swift in Sources */,
 				58B8743322B25A7700015324 /* WireguardAssociatedAddresses.swift in Sources */,
 				58781CCE22AE8918009B9D8E /* RelayConstraint.swift in Sources */,
-				58781CD322AFB9EA009B9D8E /* TunnelConfiguration.swift in Sources */,
-				58B8743822B25EAB00015324 /* PacketTunnelSettingsGenerator.swift in Sources */,
+				58781CD322AFB9EA009B9D8E /* TunnelsManager.swift in Sources */,
 				58723E7922A69DE6009837F5 /* x25519.c in Sources */,
 				58B8743622B25DE300015324 /* RelayEndpoint.swift in Sources */,
 				58781CD522AFBA39009B9D8E /* RelaySelector.swift in Sources */,

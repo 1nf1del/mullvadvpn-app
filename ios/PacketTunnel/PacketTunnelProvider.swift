@@ -94,12 +94,13 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
             return
         }
 
-        let tunnelConfiguration = TunnelConfiguration(with: tunnelProviderProtocol)
-
         RelaySelector.loadedFromRelayCache { (result) in
             switch result {
             case .success(let relaySelector):
-                if let mullvadEnpoint = relaySelector.evaluate(with: tunnelConfiguration.relayConstraint) {
+                let activeRelayConstraint = tunnelProviderProtocol.relayConstraint
+                    ?? RelayConstraint.default
+
+                if let mullvadEnpoint = relaySelector.evaluate(with: activeRelayConstraint) {
                     // TODO: replace with the real IPs returned by master
                     let interfaceAddresses = WireguardAssociatedAddresses(
                         ipv4Address: IPv4Address("127.0.0.1")!,

@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import NetworkExtension
 import os.log
 
 class ConnectViewController: UIViewController, RootContainment {
@@ -33,12 +34,28 @@ class ConnectViewController: UIViewController, RootContainment {
         let relayLocation = selectedItem.intoRelayLocation()
         let relayConstraint = RelayConstraint(location: .only(relayLocation))
 
-        TunnelConfiguration.updateRelayConstraint(relayConstraint) { (result) in
+        TunnelsManager.loadedFromPreferences { (result) in
             switch result {
-            case .success:
-                os_log(.info, "Updated the relay constraint: %{public}s", String(describing: relayConstraint))
+            case .success(let tunnelsManager):
+                let tunnel = tunnelsManager.tunnels.first
+                    ?? NETunnelProviderManager.withPacketTunnelBundleIdentifier()
+                tunnel.localizedDescription = "\(relayConstraint)"
+
+                let protocolConfiguration = tunnel.protocolConfiguration as! NETunnelProviderProtocol
+                protocolConfiguration.relayConstraint = relayConstraint
+                protocolConfiguration.serverAddress = "\(relayConstraint)"
+
+                tunnelsManager.addTunnel(tunnel, completion: { (result) in
+                    switch result {
+                    case .success:
+                        os_log(.info, "Saved constraint")
+                    case .failure(let error):
+                        os_log(.error, "Failed to save the constraint: %s", error.localizedDescription)
+                    }
+                })
+
             case .failure(let error):
-                os_log(.error, "Failed to update the relay constraint: %s", error.localizedDescription)
+                os_log(.error, "Failed to load tunnels: %s", error.localizedDescription)
             }
         }
     }
