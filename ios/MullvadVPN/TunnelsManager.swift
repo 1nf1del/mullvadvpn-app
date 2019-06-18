@@ -81,6 +81,24 @@ extension NETunnelProviderProtocol {
         }
     }
 
+    func getPrivateKey() throws -> Data? {
+        if let passwordReference = passwordReference {
+            return try PrivateKeyStore.openReference(passwordReference)
+        } else {
+            return nil
+        }
+    }
+
+    func setPrivateKey(_ privateKey: Data) throws {
+        if let oldPasswordReference = passwordReference {
+            try PrivateKeyStore.deleteReference(oldPasswordReference)
+
+            passwordReference = nil
+        }
+
+        passwordReference = try PrivateKeyStore.makeReference(privateKey: privateKey)
+    }
+
     private func decodeRelayConstraint() throws -> RelayConstraint? {
         var constraint: RelayConstraint?
 

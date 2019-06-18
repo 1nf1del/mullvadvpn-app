@@ -77,6 +77,8 @@
 		58CE5E6E224146210008646E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 58CE5E6C224146210008646E /* LaunchScreen.storyboard */; };
 		58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CE5E7B224146470008646E /* PacketTunnelProvider.swift */; };
 		58CE5E81224146470008646E /* PacketTunnel.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 58CE5E79224146470008646E /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		58D67D3C22B9061C00025CEA /* PrivateKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D67D3B22B9061C00025CEA /* PrivateKeyStore.swift */; };
+		58D67D3D22B9061C00025CEA /* PrivateKeyStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58D67D3B22B9061C00025CEA /* PrivateKeyStore.swift */; };
 		58F19E31228B2AEB00C7710B /* JSONRequestProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E30228B2AEB00C7710B /* JSONRequestProcedure.swift */; };
 		58F19E33228B383300C7710B /* AccountVerificationProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E32228B383300C7710B /* AccountVerificationProcedure.swift */; };
 		58F19E35228C15BA00C7710B /* SpinnerActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E34228C15BA00C7710B /* SpinnerActivityIndicatorView.swift */; };
@@ -176,6 +178,7 @@
 		58CE5E7B224146470008646E /* PacketTunnelProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PacketTunnelProvider.swift; sourceTree = "<group>"; };
 		58CE5E7D224146470008646E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58CE5E7E224146470008646E /* PacketTunnel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PacketTunnel.entitlements; sourceTree = "<group>"; };
+		58D67D3B22B9061C00025CEA /* PrivateKeyStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrivateKeyStore.swift; sourceTree = "<group>"; };
 		58F19E30228B2AEB00C7710B /* JSONRequestProcedure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONRequestProcedure.swift; sourceTree = "<group>"; };
 		58F19E32228B383300C7710B /* AccountVerificationProcedure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVerificationProcedure.swift; sourceTree = "<group>"; };
 		58F19E34228C15BA00C7710B /* SpinnerActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerActivityIndicatorView.swift; sourceTree = "<group>"; };
@@ -273,6 +276,7 @@
 				58FBDAAA22A52DC500EB69A3 /* MullvadVPN-Bridging-Header.h */,
 				5866F39B2243B82D00168AE5 /* MullvadVPN.entitlements */,
 				58ADDB3F227B1E7100FAFEA7 /* Optional+Unwrap.swift */,
+				58D67D3B22B9061C00025CEA /* PrivateKeyStore.swift */,
 				58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */,
 				58BFA5C522A7C97F00A6173D /* RelayCache.swift */,
 				58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */,
@@ -607,6 +611,7 @@
 				58535B85229E89E7004BCBBD /* WeakBox.swift in Sources */,
 				5862805422428EF100F5A6E1 /* TranslucentButtonBlurView.swift in Sources */,
 				5888AD83227B11080051EB06 /* SelectLocationCell.swift in Sources */,
+				58D67D3C22B9061C00025CEA /* PrivateKeyStore.swift in Sources */,
 				58CE5E66224146200008646E /* LoginViewController.swift in Sources */,
 				58ADDB3C227B1BD200FAFEA7 /* JsonRpc.swift in Sources */,
 				581CBCEE229826FD00727D7F /* StaticTableViewDataSource.swift in Sources */,
@@ -632,6 +637,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58781CC722AE602B009B9D8E /* ProcedureKit+Patches.swift in Sources */,
+				58D67D3D22B9061C00025CEA /* PrivateKeyStore.swift in Sources */,
 				58723E7A22A69DE6009837F5 /* Curve25519.swift in Sources */,
 				58BFA5CD22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */,
 				58BFA5C222A7C92900A6173D /* JsonRpc.swift in Sources */,

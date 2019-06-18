@@ -39,7 +39,7 @@ class ConnectViewController: UIViewController, RootContainment {
             case .success(let tunnelsManager):
                 let tunnel = tunnelsManager.tunnels.first
                     ?? NETunnelProviderManager.withPacketTunnelBundleIdentifier()
-                tunnel.localizedDescription = "\(relayConstraint)"
+                tunnel.localizedDescription = "Wireguard"
 
                 let protocolConfiguration = tunnel.protocolConfiguration as! NETunnelProviderProtocol
                 protocolConfiguration.relayConstraint = relayConstraint
