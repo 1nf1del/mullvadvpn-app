@@ -250,7 +250,7 @@ enum RelayListDataSourceItem: Equatable {
 
 extension RelayListDataSourceItem {
 
-    func intoRelayLocation() -> RelayLocation {
+    func intoRelayLocationConstraint() -> RelayLocationConstraint {
         switch self {
         case .country(let country):
             return .country(country.countryCode)

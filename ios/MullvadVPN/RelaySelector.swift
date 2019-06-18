@@ -35,7 +35,7 @@ class RelaySelector {
         }
     }
 
-    func evaluate(with constraint: RelayConstraint) -> MullvadEndpoint? {
+    func evaluate(with constraints: RelayConstraints) -> MullvadEndpoint? {
         // Stub implementation
 
         for country in relayList.countries {

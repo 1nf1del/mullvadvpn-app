@@ -31,8 +31,8 @@ class ConnectViewController: UIViewController, RootContainment {
         guard let selectLocationController = segue.source as? SelectLocationController else { return }
         guard let selectedItem = selectLocationController.selectedItem else { return }
 
-        let relayLocation = selectedItem.intoRelayLocation()
-        let relayConstraint = RelayConstraint(location: .only(relayLocation))
+        let relayLocation = selectedItem.intoRelayLocationConstraint()
+        let relayConstraint = RelayConstraints(location: .only(relayLocation))
 
         TunnelsManager.loadedFromPreferences { (result) in
             switch result {
@@ -42,8 +42,9 @@ class ConnectViewController: UIViewController, RootContainment {
                 tunnel.localizedDescription = "Wireguard"
 
                 let protocolConfiguration = tunnel.protocolConfiguration as! NETunnelProviderProtocol
-                protocolConfiguration.relayConstraint = relayConstraint
                 protocolConfiguration.serverAddress = "\(relayConstraint)"
+                
+                try! protocolConfiguration.setRelayConstraint(relayConstraint)
 
                 tunnelsManager.addTunnel(tunnel, completion: { (result) in
                     switch result {

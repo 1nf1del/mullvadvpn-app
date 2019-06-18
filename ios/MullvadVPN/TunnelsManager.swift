@@ -59,26 +59,15 @@ extension NETunnelProviderManager {
 
 extension NETunnelProviderProtocol {
 
-    var relayConstraint: RelayConstraint? {
-        get {
-            do {
-                return try decodeRelayConstraint()
-            } catch {
-                os_log(.error, "Failed to decode RelayConstraint: %s", error.localizedDescription)
-                return nil
-            }
-        }
-        set {
-            var config = providerConfiguration ?? [:]
+    func getRelayConstraint() throws -> RelayConstraints? {
+        return try decodeRelayConstraint()
+    }
 
-            do {
-                config[kRelayConstraintKey] = try JSONEncoder().encode(relayConstraint)
-            } catch {
-                os_log(.error, "Failed to encode the RelayConstraint: %s")
-            }
+    func setRelayConstraint(_ relayConstraint: RelayConstraints) throws {
+        var config = providerConfiguration ?? [:]
+        config[kRelayConstraintKey] = try JSONEncoder().encode(relayConstraint)
 
-            providerConfiguration = config
-        }
+        providerConfiguration = config
     }
 
     func getPrivateKey() throws -> Data? {
@@ -99,18 +88,18 @@ extension NETunnelProviderProtocol {
         passwordReference = try PrivateKeyStore.makeReference(privateKey: privateKey)
     }
 
-    private func decodeRelayConstraint() throws -> RelayConstraint? {
-        var constraint: RelayConstraint?
+    private func decodeRelayConstraint() throws -> RelayConstraints? {
+        var constraint: RelayConstraints?
 
         if let relayConstraintData = providerConfiguration?[kRelayConstraintKey] as? Data {
             constraint = try JSONDecoder()
-                .decode(RelayConstraint.self, from: relayConstraintData)
+                .decode(RelayConstraints.self, from: relayConstraintData)
         }
 
         return constraint
     }
 
-    private func encodeRelayConstraint(_ relayConstraint: RelayConstraint) throws {
+    private func encodeRelayConstraint(_ relayConstraint: RelayConstraints) throws {
         var config = providerConfiguration ?? [:]
 
         config[kRelayConstraintKey] = try JSONEncoder().encode(relayConstraint)

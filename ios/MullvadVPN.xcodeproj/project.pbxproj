@@ -32,8 +32,8 @@
 		587425C12299833500CA2045 /* RootContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 587425C02299833500CA2045 /* RootContainerViewController.swift */; };
 		58781CC622AE5F4B009B9D8E /* ProcedureKit+Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */; };
 		58781CC722AE602B009B9D8E /* ProcedureKit+Patches.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */; };
-		58781CC922AE7CA8009B9D8E /* RelayConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */; };
-		58781CCE22AE8918009B9D8E /* RelayConstraint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */; };
+		58781CC922AE7CA8009B9D8E /* RelayConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraints.swift */; };
+		58781CCE22AE8918009B9D8E /* RelayConstraints.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CC822AE7CA8009B9D8E /* RelayConstraints.swift */; };
 		58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58FFE443228C82A00036F391 /* UserDefaultsInteractor.swift */; };
 		58781CD222AFAC73009B9D8E /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelsManager.swift */; };
 		58781CD322AFB9EA009B9D8E /* TunnelsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58781CD122AFAC73009B9D8E /* TunnelsManager.swift */; };
@@ -141,7 +141,7 @@
 		58723E7822A69DE6009837F5 /* x25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = x25519.h; sourceTree = "<group>"; };
 		587425C02299833500CA2045 /* RootContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootContainerViewController.swift; sourceTree = "<group>"; };
 		58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProcedureKit+Patches.swift"; sourceTree = "<group>"; };
-		58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayConstraint.swift; sourceTree = "<group>"; };
+		58781CC822AE7CA8009B9D8E /* RelayConstraints.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelayConstraints.swift; sourceTree = "<group>"; };
 		58781CD122AFAC73009B9D8E /* TunnelsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelsManager.swift; sourceTree = "<group>"; };
 		58781CD422AFBA39009B9D8E /* RelaySelector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RelaySelector.swift; sourceTree = "<group>"; };
 		587B08DF229433EB000E6F17 /* LoginState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginState.swift; sourceTree = "<group>"; };
@@ -279,7 +279,7 @@
 				58D67D3B22B9061C00025CEA /* PrivateKeyStore.swift */,
 				58781CC522AE5F4B009B9D8E /* ProcedureKit+Patches.swift */,
 				58BFA5C522A7C97F00A6173D /* RelayCache.swift */,
-				58781CC822AE7CA8009B9D8E /* RelayConstraint.swift */,
+				58781CC822AE7CA8009B9D8E /* RelayConstraints.swift */,
 				58B8743422B25DE100015324 /* RelayEndpoint.swift */,
 				5888AD88227B18C40051EB06 /* RelayList.swift */,
 				58781CD422AFBA39009B9D8E /* RelaySelector.swift */,
@@ -603,7 +603,7 @@
 				587B08E2229460C1000E6F17 /* WebLinks.swift in Sources */,
 				5840250422B11AB700E4CFEC /* MullvadEndpoint.swift in Sources */,
 				58CCA01822426713004F3011 /* AccountViewController.swift in Sources */,
-				58781CC922AE7CA8009B9D8E /* RelayConstraint.swift in Sources */,
+				58781CC922AE7CA8009B9D8E /* RelayConstraints.swift in Sources */,
 				58ADDB3E227B1CD900FAFEA7 /* MullvadAPI.swift in Sources */,
 				58B8743222B25A7600015324 /* WireguardAssociatedAddresses.swift in Sources */,
 				587B08E0229433EB000E6F17 /* LoginState.swift in Sources */,
@@ -652,7 +652,7 @@
 				58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */,
 				58BFA5C422A7C94600A6173D /* AccountVerificationProcedure.swift in Sources */,
 				58B8743322B25A7700015324 /* WireguardAssociatedAddresses.swift in Sources */,
-				58781CCE22AE8918009B9D8E /* RelayConstraint.swift in Sources */,
+				58781CCE22AE8918009B9D8E /* RelayConstraints.swift in Sources */,
 				58781CD322AFB9EA009B9D8E /* TunnelsManager.swift in Sources */,
 				58723E7922A69DE6009837F5 /* x25519.c in Sources */,
 				58B8743622B25DE300015324 /* RelayEndpoint.swift in Sources */,

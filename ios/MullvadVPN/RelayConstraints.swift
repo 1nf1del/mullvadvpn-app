@@ -43,7 +43,7 @@ enum RelayCondition<T: Codable>: Codable {
     }
 }
 
-enum RelayLocation: Codable, CustomStringConvertible {
+enum RelayLocationConstraint: Codable, CustomStringConvertible {
     case country(String)
     case city(String, String)
     case hostname(String, String, String)
@@ -104,8 +104,8 @@ enum RelayLocation: Codable, CustomStringConvertible {
 
 }
 
-struct RelayConstraint: Codable, CustomStringConvertible {
-    var location: RelayCondition<RelayLocation> = .any
+struct RelayConstraints: Codable, CustomStringConvertible {
+    var location: RelayCondition<RelayLocationConstraint> = .any
 
     var description: String {
         switch location {
@@ -116,7 +116,7 @@ struct RelayConstraint: Codable, CustomStringConvertible {
         }
     }
 
-    static var `default`: RelayConstraint {
-        return RelayConstraint(location: .any)
+    static var `default`: RelayConstraints {
+        return RelayConstraints(location: .any)
     }
 }

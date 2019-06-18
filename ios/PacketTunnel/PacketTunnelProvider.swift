@@ -97,8 +97,8 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         RelaySelector.loadedFromRelayCache { (result) in
             switch result {
             case .success(let relaySelector):
-                let activeRelayConstraint = tunnelProviderProtocol.relayConstraint
-                    ?? RelayConstraint.default
+                let activeRelayConstraint = (try? tunnelProviderProtocol.getRelayConstraint())
+                    ?? RelayConstraints.default
 
                 if let mullvadEnpoint = relaySelector.evaluate(with: activeRelayConstraint) {
                     // TODO: replace with the real IPs returned by master
