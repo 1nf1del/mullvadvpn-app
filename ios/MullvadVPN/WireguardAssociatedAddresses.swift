@@ -10,6 +10,6 @@ import Foundation
 import Network
 
 struct WireguardAssociatedAddresses: Codable {
-    let ipv4Address: IPv4Address
-    let ipv6Address: IPv6Address
+    let ipv4Address: IPAddressRange
+    let ipv6Address: IPAddressRange
 }
