@@ -34,28 +34,12 @@ class Account {
     /// Perform the login and save the account token along with expiry (if available) to the
     /// application preferences.
     class func login(with accountToken: String) -> Procedure {
-        let userDefaultsInteractor = UserDefaultsInteractor.sharedApplicationGroupInteractor
-
         // Request account token verification
         let verificationProcedure = AccountVerificationProcedure(accountToken: accountToken)
 
         // Update the application preferences based on the AccountVerification result.
         let saveAccountDataProcedure = TransformProcedure { (verification) in
-            switch verification {
-            case .verified(let expiry):
-                userDefaultsInteractor.accountToken = accountToken
-                userDefaultsInteractor.accountExpiry = expiry
-
-            case .deferred(let error):
-                userDefaultsInteractor.accountToken = accountToken
-                userDefaultsInteractor.accountExpiry = nil
-
-                os_log(.info, #"Could not request the account verification "%{private}s": %{public}s"#,
-                       accountToken, error.localizedDescription)
-
-            case .invalid:
-                throw Error.invalidAccount
-            }
+            try self.handleVerification(verification, for: accountToken)
         }.injectResult(from: verificationProcedure)
 
         return GroupProcedure(operations: [verificationProcedure, saveAccountDataProcedure])
@@ -67,6 +51,38 @@ class Account {
 
         userDefaultsInteractor.accountToken = nil
         userDefaultsInteractor.accountExpiry = nil
+    }
+
+    private class func handleVerification(_ verification: AccountVerification, for accountToken: String) throws {
+        switch verification {
+        case .verified(let expiry):
+            try self.setupAccount(accountToken: accountToken, expiry: expiry)
+
+        case .deferred(let error):
+            try self.setupAccount(accountToken: accountToken)
+
+            os_log(.info, #"Could not request the account verification "%{private}s": %{public}s"#,
+                   accountToken, error.localizedDescription)
+
+        case .invalid:
+            throw Error.invalidAccount
+        }
+    }
+
+    private class func setupAccount(accountToken: String, expiry: Date? = nil) throws {
+        let userDefaultsInteractor = UserDefaultsInteractor.sharedApplicationGroupInteractor
+
+        let tunnelConfig = try TunnelConfigurationManager.shared.getConfiguration(accountToken: accountToken)
+            ?? TunnelConfiguration(
+                accountToken: accountToken,
+                relayConstraints: RelayConstraints.default,
+                interface: InterfaceConfiguration.default)
+
+        _ = try TunnelConfigurationManager.shared.addConfiguration(tunnelConfig)
+
+        // Save the account token and expiry into preferences
+        userDefaultsInteractor.accountToken = accountToken
+        userDefaultsInteractor.accountExpiry = expiry
     }
 
 }

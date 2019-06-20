@@ -34,31 +34,7 @@ class ConnectViewController: UIViewController, RootContainment {
         let relayLocation = selectedItem.intoRelayLocationConstraint()
         let relayConstraint = RelayConstraints(location: .only(relayLocation))
 
-        TunnelsManager.loadedFromPreferences { (result) in
-            switch result {
-            case .success(let tunnelsManager):
-                let tunnel = tunnelsManager.tunnels.first
-                    ?? NETunnelProviderManager.withPacketTunnelBundleIdentifier()
-                tunnel.localizedDescription = "Wireguard"
-
-                let protocolConfiguration = tunnel.protocolConfiguration as! NETunnelProviderProtocol
-                protocolConfiguration.serverAddress = "\(relayConstraint)"
-                
-                try! protocolConfiguration.setRelayConstraint(relayConstraint)
-
-                tunnelsManager.addTunnel(tunnel, completion: { (result) in
-                    switch result {
-                    case .success:
-                        os_log(.info, "Saved constraint")
-                    case .failure(let error):
-                        os_log(.error, "Failed to save the constraint: %s", error.localizedDescription)
-                    }
-                })
-
-            case .failure(let error):
-                os_log(.error, "Failed to load tunnels: %s", error.localizedDescription)
-            }
-        }
+        // SAVE TUNNEL RELAY CONSTRAINT
     }
 
 }

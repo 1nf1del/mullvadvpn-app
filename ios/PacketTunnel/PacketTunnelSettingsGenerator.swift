@@ -11,9 +11,8 @@ import Network
 import NetworkExtension
 
 struct PacketTunnelSettingsGenerator {
-    let privateKey: Data
     let mullvadEndpoint: MullvadEndpoint
-    let interfaceAddresses: WireguardAssociatedAddresses
+    let tunnelConfiguration: TunnelConfiguration
 
     func networkSettings() -> NEPacketTunnelNetworkSettings {
         let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "\(mullvadEndpoint.relay.address)")
@@ -21,6 +20,7 @@ struct PacketTunnelSettingsGenerator {
         networkSettings.mtu = 1280
         networkSettings.dnsSettings = dnsSettings()
         networkSettings.ipv4Settings = ipv4Settings()
+        networkSettings.ipv6Settings = ipv6Settings()
 
         return networkSettings
     }
@@ -36,8 +36,9 @@ struct PacketTunnelSettingsGenerator {
 
     func wireguardUapiConfiguration() -> String {
         var config = [String]()
+        let privateKeyBase64 = tunnelConfiguration.interface.privateKey.bytes.base64EncodedString()
 
-        config.append("private_key=\(privateKey.base64EncodedString())")
+        config.append("private_key=\(privateKeyBase64)")
         config.append("listen_port=0")
 
         config.append("replace_peers=true")
@@ -64,9 +65,12 @@ struct PacketTunnelSettingsGenerator {
     }
 
     private func ipv4Settings() -> NEIPv4Settings {
+        let interfaceAddresses = tunnelConfiguration.interface.addresses
+        let ipv4AddressRanges = interfaceAddresses.filter { $0.address is IPv4Address }
+
         let ipv4Settings = NEIPv4Settings(
-            addresses: ["\(interfaceAddresses.ipv4Address)"],
-            subnetMasks: ["255.255.255.255"])
+            addresses: ipv4AddressRanges.map { "\($0.address)" },
+            subnetMasks: ipv4AddressRanges.map { self.ipv4SubnetMaskString(of: $0) })
 
         ipv4Settings.includedRoutes = [
             NEIPv4Route(destinationAddress: "0.0.0.0", subnetMask: "0.0.0.0")
@@ -79,5 +83,32 @@ struct PacketTunnelSettingsGenerator {
         ]
 
         return ipv4Settings
+    }
+
+    private func ipv6Settings() -> NEIPv6Settings {
+        let interfaceAddresses = tunnelConfiguration.interface.addresses
+        let ipv6AddressRanges = interfaceAddresses.filter { $0.address is IPv6Address }
+
+        let ipv6Settings = NEIPv6Settings(
+            addresses: ipv6AddressRanges.map { "\($0.address)" },
+            networkPrefixLengths: ipv6AddressRanges.map { NSNumber(value: $0.networkPrefixLength) }
+        )
+
+        ipv6Settings.includedRoutes = []
+        ipv6Settings.excludedRoutes = []
+
+        return ipv6Settings
+    }
+
+    private func ipv4SubnetMaskString(of addressRange: IPAddressRange) -> String {
+        let length: UInt8 = addressRange.networkPrefixLength
+        assert(length <= 32)
+        var octets: [UInt8] = [0, 0, 0, 0]
+        let subnetMask: UInt32 = length > 0 ? ~UInt32(0) << (32 - length) : UInt32(0)
+        octets[0] = UInt8(truncatingIfNeeded: subnetMask >> 24)
+        octets[1] = UInt8(truncatingIfNeeded: subnetMask >> 16)
+        octets[2] = UInt8(truncatingIfNeeded: subnetMask >> 8)
+        octets[3] = UInt8(truncatingIfNeeded: subnetMask)
+        return octets.map { String($0) }.joined(separator: ".")
     }
 }

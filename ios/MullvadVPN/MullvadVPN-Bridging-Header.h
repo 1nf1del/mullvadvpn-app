@@ -3,3 +3,4 @@
 //
 
 #include "wireguard-go-version.h"
+#include "x25519.h"

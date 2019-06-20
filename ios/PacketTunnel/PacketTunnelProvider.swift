@@ -24,95 +24,36 @@ enum PacketTunnelProviderError: Error {
 class PacketTunnelProvider: NEPacketTunnelProvider {
 
     private var handle: Int32?
-    private var networkMonitor: NWPathMonitor {
-        let networkMonitor = NWPathMonitor()
-        networkMonitor.pathUpdateHandler = { [weak self] in self?.didReceiveNetworkPathUpdate(path: $0) }
-        return networkMonitor
-    }
+    private var networkMonitor: NWPathMonitor?
     private let networkMonitorQueue = DispatchQueue(label: "NetworkMonitor")
     private var lastSeenInterfaces: [String] = []
     private var tunnelInterfaceName: String?
 
+    private var packetTunnelSettingsGenerator: PacketTunnelSettingsGenerator?
+
     deinit {
-        networkMonitor.cancel()
-    }
-
-    private func configureTunnel(privateKey: Data,
-                                 mullvadEndpoint: MullvadEndpoint,
-                                 interfaceAddresses: WireguardAssociatedAddresses,
-                                 completionHandler: @escaping (Error?) -> Void)
-    {
-        let packetTunnelConfigGenerator = PacketTunnelSettingsGenerator(
-            privateKey: privateKey,
-            mullvadEndpoint: mullvadEndpoint,
-            interfaceAddresses: interfaceAddresses)
-
-        let networkSettings = packetTunnelConfigGenerator.networkSettings()
-
-        setTunnelNetworkSettings(networkSettings) { (error) in
-            if let error = error {
-                os_log(.error, "Cannot set network settings: %{public}s", error.localizedDescription)
-
-                completionHandler(PacketTunnelProviderError.setNetworkSettings)
-            } else {
-                self.networkMonitor.start(queue: self.networkMonitorQueue)
-
-                let fileDescriptor = self.getTunnelInterfaceDescriptor()
-                if fileDescriptor < 0 {
-                    os_log(.error, "Cannot find the file descriptor for socket.")
-                    completionHandler(PacketTunnelProviderError.fileDescriptorNotFound)
-                    return
-                }
-
-                self.tunnelInterfaceName = self.getInterfaceName(fileDescriptor)
-
-                os_log(.info, "Tunnel interface is %{public}s", self.tunnelInterfaceName ?? "unknown")
-
-                // TODO: Generate configuration
-                //                let handle = wgTurnOn(gostring_t, fileDescriptor)
-                let handle: Int32 = 0
-                if handle < 0 {
-                    os_log(.error, "Failed to start the Wireguard backend, wgTurnOn returned %{public}d", handle)
-
-                    completionHandler(PacketTunnelProviderError.startWireGuardBackend)
-                    return
-                }
-
-                self.handle = handle
-
-                completionHandler(nil)
-            }
-        }
+        networkMonitor?.cancel()
     }
 
     override func startTunnel(options: [String : NSObject]?, completionHandler: @escaping (Error?) -> Void) {
-        os_log(.info, "Starting the tunnel")
+        os_log(.error, "Starting the tunnel")
 
-        guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol else {
-            os_log(.error, "Failed to start the tunnel because of invalid protocol configuration")
-            completionHandler(PacketTunnelProviderError.invalidProtocolConfiguration)
-            return
+        configureLogger()
+
+        guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
+            let tunnelConfiguration = try? tunnelProviderProtocol.asTunnelConfiguration() else {
+                os_log(.error, "Failed to start the tunnel because of invalid protocol configuration")
+                completionHandler(PacketTunnelProviderError.invalidProtocolConfiguration)
+                return
         }
 
         RelaySelector.loadedFromRelayCache { (result) in
             switch result {
             case .success(let relaySelector):
-                let activeRelayConstraint = (try? tunnelProviderProtocol.getRelayConstraint())
-                    ?? RelayConstraints.default
-
-                if let mullvadEnpoint = relaySelector.evaluate(with: activeRelayConstraint) {
-                    // TODO: replace with the real IPs returned by master
-                    let interfaceAddresses = WireguardAssociatedAddresses(
-                        ipv4Address: IPv4Address("127.0.0.1")!,
-                        ipv6Address: IPv6Address("::1")!)
-
-                    // TODO: replace with the real private key
-                    let privateKey = Data(count: 1337)
-
+                if let mullvadEnpoint = relaySelector.evaluate(with: tunnelConfiguration.relayConstraints) {
                     self.configureTunnel(
-                        privateKey: privateKey,
+                        tunnelConfiguration: tunnelConfiguration,
                         mullvadEndpoint: mullvadEnpoint,
-                        interfaceAddresses: interfaceAddresses,
                         completionHandler: completionHandler)
                 } else {
                     completionHandler(PacketTunnelProviderError.noRelaySatisfyingConstraint)
@@ -127,9 +68,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        os_log(.info, "Stopping the tunnel")
+        os_log(.error, "Stopping the tunnel")
 
-        networkMonitor.cancel()
+        networkMonitor?.cancel()
+        networkMonitor = nil
 
         if let handle = self.handle {
             wgTurnOff(handle)
@@ -153,6 +95,83 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     override func wake() {
         // Add code here to wake up.
     }
+
+    private func configureLogger() {
+        wgSetLogger { level, msgC in
+            guard let msgC = msgC else { return }
+            let logType: OSLogType
+            switch level {
+            case 0:
+                logType = .debug
+            case 1:
+                logType = .info
+            case 2:
+                logType = .error
+            default:
+                logType = .default
+            }
+
+            let swiftString = String(cString: msgC)
+
+            os_log(.error, "Wireguard: %{public}s", swiftString)
+        }
+    }
+
+    private func configureTunnel(tunnelConfiguration: TunnelConfiguration,
+                                 mullvadEndpoint: MullvadEndpoint,
+                                 completionHandler: @escaping (Error?) -> Void)
+    {
+        let packetTunnelConfigGenerator = PacketTunnelSettingsGenerator(
+            mullvadEndpoint: mullvadEndpoint,
+            tunnelConfiguration: tunnelConfiguration)
+
+        self.packetTunnelSettingsGenerator = packetTunnelConfigGenerator
+
+        let networkSettings = packetTunnelConfigGenerator.networkSettings()
+
+        setTunnelNetworkSettings(networkSettings) { (error) in
+            if let error = error {
+                os_log(.error, "Cannot set network settings: %{public}s", error.localizedDescription)
+
+                completionHandler(PacketTunnelProviderError.setNetworkSettings)
+            } else {
+                let networkMonitor = NWPathMonitor()
+                networkMonitor.pathUpdateHandler = { [weak self] in self?.didReceiveNetworkPathUpdate(path: $0) }
+                networkMonitor.start(queue: self.networkMonitorQueue)
+                self.networkMonitor = networkMonitor
+
+                let fileDescriptor = self.getTunnelInterfaceDescriptor()
+                if fileDescriptor < 0 {
+                    os_log(.error, "Cannot find the file descriptor for socket.")
+                    completionHandler(PacketTunnelProviderError.fileDescriptorNotFound)
+                    return
+                }
+
+                self.tunnelInterfaceName = self.getInterfaceName(fileDescriptor)
+
+                os_log(.error, "Tunnel interface is %{public}s", self.tunnelInterfaceName ?? "unknown")
+
+                let wireguardConfig = packetTunnelConfigGenerator.wireguardUapiConfiguration()
+
+                os_log(.error, "Wireguard configuration: %{public}s", wireguardConfig)
+
+                let handle = packetTunnelConfigGenerator.wireguardUapiConfiguration()
+                    .withGoString { wgTurnOn($0, fileDescriptor) }
+
+                if handle < 0 {
+                    os_log(.error, "Failed to start the Wireguard backend, wgTurnOn returned %{public}d", handle)
+
+                    completionHandler(PacketTunnelProviderError.startWireGuardBackend)
+                    return
+                }
+
+                self.handle = handle
+
+                completionHandler(nil)
+            }
+        }
+    }
+
 }
 
 extension PacketTunnelProvider {
@@ -162,24 +181,18 @@ extension PacketTunnelProvider {
             return
         }
 
-        os_log(.debug,
+        os_log(.error,
                "Network change detected with %{public}s route and interface order %s",
                path.status.debugDescription,
                path.availableInterfaces.debugDescription)
 
         guard path.status == .satisfied else { return }
 
-        // TODO: Update configuration
-        // wgSetConfig(handle, $0)
-
-        let interfaces = path.availableInterfaces.compactMap { (interface) -> String? in
-            if interface.name == tunnelInterfaceName {
-                return nil
-            } else {
-                return interface.name
-            }
+        if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
+            _ = packetTunnelSettingsGenerator.wireguardEndpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
         }
 
+        let interfaces = path.availableInterfaces.filter { $0.name != tunnelInterfaceName }.compactMap { $0.name }
         if !interfaces.elementsEqual(lastSeenInterfaces) {
             lastSeenInterfaces = interfaces
             wgBumpSockets(handle)
@@ -235,7 +248,10 @@ extension Network.NWPath.Status: CustomDebugStringConvertible {
 }
 
 extension String {
-    func withGoString<T>(_ body: (gostring_t) -> T) -> T {
-        return withCString { body(gostring_t(p: $0, n: self.utf8.count)) }
+    func withGoString<R>(_ call: (gostring_t) -> R) -> R {
+        func helper(_ pointer: UnsafePointer<Int8>?, _ call: (gostring_t) -> R) -> R {
+            return call(gostring_t(p: pointer, n: utf8.count))
+        }
+        return helper(self, call)
     }
 }
