@@ -8,7 +8,13 @@
 
 import Foundation
 
-struct AnyEncodable: Encodable {
+extension Encodable {
+    fileprivate func encode(to container: inout SingleValueEncodingContainer) throws {
+        try container.encode(self)
+    }
+}
+
+struct AnyEncodable : Encodable {
     let value: Encodable
 
     init(_ value: Encodable) {
@@ -16,7 +22,8 @@ struct AnyEncodable: Encodable {
     }
 
     func encode(to encoder: Encoder) throws {
-        try value.encode(to: encoder)
+        var container = encoder.singleValueContainer()
+        try value.encode(to: &container)
     }
 }
 
