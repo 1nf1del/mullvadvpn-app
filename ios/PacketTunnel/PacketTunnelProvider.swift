@@ -10,7 +10,7 @@ import Foundation
 import Network
 import NetworkExtension
 import ProcedureKit
-import os.log
+import os
 
 enum PacketTunnelProviderError: Error {
     case readRelayCache
@@ -187,10 +187,6 @@ extension PacketTunnelProvider {
                path.availableInterfaces.debugDescription)
 
         guard path.status == .satisfied else { return }
-
-        if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
-            _ = packetTunnelSettingsGenerator.wireguardEndpointUapiConfiguration().withGoString { return wgSetConfig(handle, $0) }
-        }
 
         let interfaces = path.availableInterfaces.filter { $0.name != tunnelInterfaceName }.compactMap { $0.name }
         if !interfaces.elementsEqual(lastSeenInterfaces) {

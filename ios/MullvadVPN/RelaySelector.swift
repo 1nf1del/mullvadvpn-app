@@ -8,6 +8,7 @@
 
 import Foundation
 import Network
+import os
 
 class RelaySelector {
 
@@ -51,12 +52,17 @@ class RelaySelector {
                             .randomElement() // random port
                             else { continue }
 
-                        let relayEndpoint = RelayEndpoint(
-                            address: relay.ipv4AddrIn,
-                            port: randomPort)
+                        guard let networkPort = NWEndpoint.Port(rawValue: randomPort) else {
+                            os_log("Couldn't convert %{public}d to NWEndpoint.Port", randomPort)
+                            return nil
+                        }
+
+                        let ipv4Endpoint = NWEndpoint.hostPort(host: .ipv4(relay.ipv4AddrIn), port: networkPort)
+                        // let ipv6Endpoint = NWEndpoint.hostPort(host: .ipv4(relay.ipv6AddrIn), port: randomPort)
 
                         return MullvadEndpoint(
-                            relay: relayEndpoint,
+                            ipv4Relay: ipv4Endpoint,
+                            ipv6Relay: nil,
                             ipv4Gateway: wireguardTunnel.ipv4Gateway,
                             ipv6Gateway: wireguardTunnel.ipv6Gateway,
                             publicKey: wireguardTunnel.publicKey

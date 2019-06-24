@@ -8,7 +8,7 @@
 
 import UIKit
 import NetworkExtension
-import os.log
+import os
 
 class ConnectViewController: UIViewController, RootContainment {
 

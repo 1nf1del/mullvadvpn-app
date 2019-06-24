@@ -8,7 +8,7 @@
 
 import Foundation
 import ProcedureKit
-import os.log
+import os
 
 class RelayCache {
     /// Internal procedure queue

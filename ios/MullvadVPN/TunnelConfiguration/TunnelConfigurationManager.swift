@@ -9,7 +9,7 @@
 import Foundation
 import ProcedureKit
 import NetworkExtension
-import os.log
+import os
 
 /// The service name associated with the key store
 private let kServiceName = "Tunnel Configuration Store"

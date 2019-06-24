@@ -15,7 +15,8 @@ struct PacketTunnelSettingsGenerator {
     let tunnelConfiguration: TunnelConfiguration
 
     func networkSettings() -> NEPacketTunnelNetworkSettings {
-        let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: "\(mullvadEndpoint.relay.address)")
+        let tunnelRemoteAddress = "\(mullvadEndpoint.ipv4Relay)"
+        let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: tunnelRemoteAddress)
 
         networkSettings.mtu = 1280
         networkSettings.dnsSettings = dnsSettings()
@@ -25,26 +26,18 @@ struct PacketTunnelSettingsGenerator {
         return networkSettings
     }
 
-    func wireguardEndpointUapiConfiguration() -> String {
-        var config = [String]()
-
-        config.append("public_key=\(mullvadEndpoint.publicKey)")
-        config.append("endpoint=\(mullvadEndpoint.relay)")
-
-        return config.joined(separator: "\n")
-    }
-
     func wireguardUapiConfiguration() -> String {
         var config = [String]()
-        let privateKeyBase64 = tunnelConfiguration.interface.privateKey.bytes.base64EncodedString()
+        let privateKeyHex = tunnelConfiguration.interface.privateKey.bytes.hexEncodedString()
+        let publicKeyHex = mullvadEndpoint.publicKey.hexEncodedString()
 
-        config.append("private_key=\(privateKeyBase64)")
+        config.append("private_key=\(privateKeyHex)")
         config.append("listen_port=0")
 
         config.append("replace_peers=true")
 
-        config.append("public_key=\(mullvadEndpoint.publicKey)")
-        config.append("endpoint=\(mullvadEndpoint.relay)")
+        config.append("public_key=\(publicKeyHex)")
+        config.append("endpoint=\(mullvadEndpoint.ipv4Relay)")
 
         config.append("replace_allowed_ips=true")
         config.append("allowed_ip=0.0.0.0/0")
@@ -73,14 +66,18 @@ struct PacketTunnelSettingsGenerator {
             subnetMasks: ipv4AddressRanges.map { self.ipv4SubnetMaskString(of: $0) })
 
         ipv4Settings.includedRoutes = [
-            NEIPv4Route(destinationAddress: "0.0.0.0", subnetMask: "0.0.0.0")
+            NEIPv4Route.default() // 0.0.0.0/0
         ]
 
-        ipv4Settings.excludedRoutes = [
-            NEIPv4Route(
-                destinationAddress: "\(mullvadEndpoint.relay.address)",
-                subnetMask: "255.255.255.255")
-        ]
+        if case .hostPort(.ipv4(let relayAddress), _) = mullvadEndpoint.ipv4Relay {
+            let relayAddressRange = IPAddressRange(address: relayAddress, networkPrefixLength: 32)
+
+            ipv4Settings.excludedRoutes = [
+                NEIPv4Route(
+                    destinationAddress: "\(relayAddressRange.address)",
+                    subnetMask: ipv4SubnetMaskString(of: relayAddressRange))
+            ]
+        }
 
         return ipv4Settings
     }
@@ -94,8 +91,17 @@ struct PacketTunnelSettingsGenerator {
             networkPrefixLengths: ipv6AddressRanges.map { NSNumber(value: $0.networkPrefixLength) }
         )
 
-        ipv6Settings.includedRoutes = []
-        ipv6Settings.excludedRoutes = []
+        ipv6Settings.includedRoutes = [
+            NEIPv6Route.default() // ::0
+        ]
+
+        if case .hostPort(.ipv6(let relayAddress), _)? = mullvadEndpoint.ipv6Relay {
+            ipv6Settings.excludedRoutes = [
+                NEIPv6Route(
+                    destinationAddress: "\(relayAddress)",
+                    networkPrefixLength: 128)
+            ]
+        }
 
         return ipv6Settings
     }

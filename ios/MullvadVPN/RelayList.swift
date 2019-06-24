@@ -40,7 +40,7 @@ struct RelayList: Codable {
     struct WireguardTunnel: Codable {
         let ipv4Gateway: IPv4Address
         let ipv6Gateway: IPv6Address
-        let publicKey: String
+        let publicKey: Data
         let portRanges: [ClosedRange<UInt16>]
     }
 

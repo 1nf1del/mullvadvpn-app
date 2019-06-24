@@ -7,7 +7,7 @@
 //
 
 import UIKit
-import os.log
+import os
 
 private let cellIdentifier = "Cell"
 

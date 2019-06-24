@@ -8,7 +8,7 @@
 
 import UIKit
 import ProcedureKit
-import os.log
+import os
 
 private let kMinimumAccountTokenLength = 10
 private let kValidAccountTokenCharacterSet = CharacterSet(charactersIn: "01234567890")

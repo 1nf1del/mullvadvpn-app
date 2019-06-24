@@ -7,7 +7,7 @@
 //
 
 import Foundation
-import os.log
+import os
 import ProcedureKit
 
 private let kRefreshIntervalSeconds: TimeInterval = 60

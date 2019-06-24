@@ -11,8 +11,9 @@ import Network
 
 /// Contains server data needed to connect to a single mullvad endpoint
 struct MullvadEndpoint {
-    let relay: RelayEndpoint
+    let ipv4Relay: NWEndpoint
+    let ipv6Relay: NWEndpoint?
     let ipv4Gateway: IPv4Address
     let ipv6Gateway: IPv6Address
-    let publicKey: String
+    let publicKey: Data
 }

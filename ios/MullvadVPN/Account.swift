@@ -8,7 +8,7 @@
 
 import Foundation
 import ProcedureKit
-import os.log
+import os
 
 /// A class that groups the account related operations
 class Account {
