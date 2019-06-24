@@ -74,6 +74,9 @@
 		58C6B35522BB87C4003C19AD /* WireguardPrivateKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C6B35322BB87C4003C19AD /* WireguardPrivateKey.swift */; };
 		58C6B35E22BBBFE3003C19AD /* Data+HexCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C6B35D22BBBFE3003C19AD /* Data+HexCoding.swift */; };
 		58C6B35F22BBBFE3003C19AD /* Data+HexCoding.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C6B35D22BBBFE3003C19AD /* Data+HexCoding.swift */; };
+		58C6B36122C0EC82003C19AD /* NWEndpoint+DNS64.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C6B36022C0EC82003C19AD /* NWEndpoint+DNS64.swift */; };
+		58C6B36522C10596003C19AD /* NWEndpoint+Wireguard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C6B36422C10596003C19AD /* NWEndpoint+Wireguard.swift */; };
+		58C6B36722C106FC003C19AD /* WireguardConfigurationBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58C6B36622C106FC003C19AD /* WireguardConfigurationBuilder.swift */; };
 		58CCA010224249A1004F3011 /* ConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CCA00F224249A1004F3011 /* ConnectViewController.swift */; };
 		58CCA01222424D11004F3011 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CCA01122424D11004F3011 /* SettingsViewController.swift */; };
 		58CCA0162242560B004F3011 /* UIColor+Palette.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CCA0152242560B004F3011 /* UIColor+Palette.swift */; };
@@ -173,6 +176,9 @@
 		58C6B34E22BB7AC0003C19AD /* IPAddressRange.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IPAddressRange.swift; sourceTree = "<group>"; };
 		58C6B35322BB87C4003C19AD /* WireguardPrivateKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardPrivateKey.swift; sourceTree = "<group>"; };
 		58C6B35D22BBBFE3003C19AD /* Data+HexCoding.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Data+HexCoding.swift"; sourceTree = "<group>"; };
+		58C6B36022C0EC82003C19AD /* NWEndpoint+DNS64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWEndpoint+DNS64.swift"; sourceTree = "<group>"; };
+		58C6B36422C10596003C19AD /* NWEndpoint+Wireguard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NWEndpoint+Wireguard.swift"; sourceTree = "<group>"; };
+		58C6B36622C106FC003C19AD /* WireguardConfigurationBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WireguardConfigurationBuilder.swift; sourceTree = "<group>"; };
 		58CCA00F224249A1004F3011 /* ConnectViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ConnectViewController.swift; sourceTree = "<group>"; };
 		58CCA01122424D11004F3011 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
 		58CCA0152242560B004F3011 /* UIColor+Palette.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Palette.swift"; sourceTree = "<group>"; };
@@ -333,12 +339,15 @@
 			children = (
 				58723E7722A69DE6009837F5 /* Curve25519.swift */,
 				58CE5E7D224146470008646E /* Info.plist */,
+				58C6B36022C0EC82003C19AD /* NWEndpoint+DNS64.swift */,
+				58C6B36422C10596003C19AD /* NWEndpoint+Wireguard.swift */,
 				58FBDAA422A52BDA00EB69A3 /* PacketTunnel-Bridging-Header.h */,
 				58CE5E7E224146470008646E /* PacketTunnel.entitlements */,
-				58B8743722B25EAB00015324 /* PacketTunnelSettingsGenerator.swift */,
 				58CE5E7B224146470008646E /* PacketTunnelProvider.swift */,
+				58B8743722B25EAB00015324 /* PacketTunnelSettingsGenerator.swift */,
 				58723E7622A69DE6009837F5 /* x25519.c */,
 				58723E7822A69DE6009837F5 /* x25519.h */,
+				58C6B36622C106FC003C19AD /* WireguardConfigurationBuilder.swift */,
 			);
 			path = PacketTunnel;
 			sourceTree = "<group>";
@@ -671,6 +680,7 @@
 				58BFA5C322A7C93400A6173D /* RelayList.swift in Sources */,
 				58BFA5C122A7C92400A6173D /* JSONRequestProcedure.swift in Sources */,
 				5840250222B1124600E4CFEC /* IpAddress+Codable.swift in Sources */,
+				58C6B36522C10596003C19AD /* NWEndpoint+Wireguard.swift in Sources */,
 				58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */,
 				58B8743B22B788D200015324 /* PacketTunnelSettingsGenerator.swift in Sources */,
 				58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */,
@@ -681,6 +691,8 @@
 				58BFA5C722A7C97F00A6173D /* RelayCache.swift in Sources */,
 				58BFA5C022A7C8A900A6173D /* MullvadAPI.swift in Sources */,
 				58BFA5C422A7C94600A6173D /* AccountVerificationProcedure.swift in Sources */,
+				58C6B36122C0EC82003C19AD /* NWEndpoint+DNS64.swift in Sources */,
+				58C6B36722C106FC003C19AD /* WireguardConfigurationBuilder.swift in Sources */,
 				58C6B34922BA99DF003C19AD /* TunnelConfigurationManager.swift in Sources */,
 				58781CCE22AE8918009B9D8E /* RelayConstraints.swift in Sources */,
 				58723E7922A69DE6009837F5 /* x25519.c in Sources */,

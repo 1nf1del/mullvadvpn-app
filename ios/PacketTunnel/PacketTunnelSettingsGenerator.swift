@@ -9,13 +9,22 @@
 import Foundation
 import Network
 import NetworkExtension
+import os
 
 struct PacketTunnelSettingsGenerator {
     let mullvadEndpoint: MullvadEndpoint
     let tunnelConfiguration: TunnelConfiguration
 
     func networkSettings() -> NEPacketTunnelNetworkSettings {
-        let tunnelRemoteAddress = "\(mullvadEndpoint.ipv4Relay)"
+        let tunnelRemoteAddress: String
+
+        switch mullvadEndpoint.ipv4Relay {
+        case .hostPort(let host, _):
+            tunnelRemoteAddress = "\(host)"
+        default:
+            fatalError("Unsupported address: \(mullvadEndpoint.ipv4Relay)")
+        }
+
         let networkSettings = NEPacketTunnelNetworkSettings(tunnelRemoteAddress: tunnelRemoteAddress)
 
         networkSettings.mtu = 1280
@@ -27,22 +36,38 @@ struct PacketTunnelSettingsGenerator {
     }
 
     func wireguardUapiConfiguration() -> String {
-        var config = [String]()
-        let privateKeyHex = tunnelConfiguration.interface.privateKey.bytes.hexEncodedString()
-        let publicKeyHex = mullvadEndpoint.publicKey.hexEncodedString()
+        let builder = WireguardConfigurationBuilder()
+            .privateKey(tunnelConfiguration.interface.privateKey)
+            .listenPort(0)
+            .replacePeers(true)
 
-        config.append("private_key=\(privateKeyHex)")
-        config.append("listen_port=0")
+        addPeersConfiguration(into: builder)
 
-        config.append("replace_peers=true")
+        builder.replaceAllowedIPs(true)
+            .allowedIp(IPAddressRange(from: "0.0.0.0/0")!)
 
-        config.append("public_key=\(publicKeyHex)")
-        config.append("endpoint=\(mullvadEndpoint.ipv4Relay)")
+        return builder.build()
+    }
 
-        config.append("replace_allowed_ips=true")
-        config.append("allowed_ip=0.0.0.0/0")
+    func wireguardEndpointUapiConfiguration() -> String {
+        let builder = WireguardConfigurationBuilder()
 
-        return config.joined(separator: "\n")
+        addPeersConfiguration(into: builder)
+
+        return builder.build()
+    }
+
+    private func addPeersConfiguration(into builder: WireguardConfigurationBuilder) {
+        let peers = [mullvadEndpoint.ipv4Relay, mullvadEndpoint.ipv6Relay]
+            .compactMap { $0 }
+
+        for peer in peers {
+            do {
+                builder.peer(try peer.withReresolvedIP(), publicKey: mullvadEndpoint.publicKey)
+            } catch {
+                os_log(.error, "Failed to re-resolve the endpoint: %s", "\(peer)")
+            }
+        }
     }
 
     private func dnsSettings() -> NEDNSSettings {

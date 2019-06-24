@@ -36,12 +36,12 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func startTunnel(options: [String : NSObject]?, completionHandler: @escaping (Error?) -> Void) {
-        os_log(.error, "Starting the tunnel")
+        os_log(.info, "Starting the tunnel")
 
         configureLogger()
 
         guard let tunnelProviderProtocol = protocolConfiguration as? NETunnelProviderProtocol,
-            let tunnelConfiguration = try? tunnelProviderProtocol.asTunnelConfiguration() else {
+            let tunnelConfiguration = tunnelProviderProtocol.asTunnelConfiguration() else {
                 os_log(.error, "Failed to start the tunnel because of invalid protocol configuration")
                 completionHandler(PacketTunnelProviderError.invalidProtocolConfiguration)
                 return
@@ -68,7 +68,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
     }
 
     override func stopTunnel(with reason: NEProviderStopReason, completionHandler: @escaping () -> Void) {
-        os_log(.error, "Stopping the tunnel")
+        os_log(.info, "Stopping the tunnel")
 
         networkMonitor?.cancel()
         networkMonitor = nil
@@ -113,7 +113,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
             let swiftString = String(cString: msgC)
 
-            os_log(.error, "Wireguard: %{public}s", swiftString)
+            os_log(.debug, "Wireguard: %{public}s", swiftString)
         }
     }
 
@@ -149,11 +149,7 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
 
                 self.tunnelInterfaceName = self.getInterfaceName(fileDescriptor)
 
-                os_log(.error, "Tunnel interface is %{public}s", self.tunnelInterfaceName ?? "unknown")
-
-                let wireguardConfig = packetTunnelConfigGenerator.wireguardUapiConfiguration()
-
-                os_log(.error, "Wireguard configuration: %{public}s", wireguardConfig)
+                os_log(.info, "Tunnel interface is %{public}s", self.tunnelInterfaceName ?? "unknown")
 
                 let handle = packetTunnelConfigGenerator.wireguardUapiConfiguration()
                     .withGoString { wgTurnOn($0, fileDescriptor) }
@@ -181,12 +177,17 @@ extension PacketTunnelProvider {
             return
         }
 
-        os_log(.error,
+        os_log(.info,
                "Network change detected with %{public}s route and interface order %s",
                path.status.debugDescription,
                path.availableInterfaces.debugDescription)
 
         guard path.status == .satisfied else { return }
+
+        if let packetTunnelSettingsGenerator = packetTunnelSettingsGenerator {
+            _ = packetTunnelSettingsGenerator.wireguardEndpointUapiConfiguration()
+                .withGoString { wgSetConfig(handle, $0) }
+        }
 
         let interfaces = path.availableInterfaces.filter { $0.name != tunnelInterfaceName }.compactMap { $0.name }
         if !interfaces.elementsEqual(lastSeenInterfaces) {
