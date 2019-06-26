@@ -50,10 +50,10 @@ class PacketTunnelProvider: NEPacketTunnelProvider {
         RelaySelector.loadedFromRelayCache { (result) in
             switch result {
             case .success(let relaySelector):
-                if let mullvadEnpoint = relaySelector.evaluate(with: tunnelConfiguration.relayConstraints) {
+                if let mullvadEndpoint = relaySelector.evaluate(with: tunnelConfiguration.relayConstraints) {
                     self.configureTunnel(
                         tunnelConfiguration: tunnelConfiguration,
-                        mullvadEndpoint: mullvadEnpoint,
+                        mullvadEndpoint: mullvadEndpoint,
                         completionHandler: completionHandler)
                 } else {
                     completionHandler(PacketTunnelProviderError.noRelaySatisfyingConstraint)
