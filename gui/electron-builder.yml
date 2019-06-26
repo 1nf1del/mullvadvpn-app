@@ -99,7 +99,9 @@ win:
       to: .
     - from: ../windows/winutil/bin/x64-Release/winutil.dll
       to: .
-      
+    - from: ../dist-assets/binaries/windows/libwg.dll
+      to: .
+
 linux:
   target:
     - deb
