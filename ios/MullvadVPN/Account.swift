@@ -72,13 +72,12 @@ class Account {
     private class func setupAccount(accountToken: String, expiry: Date? = nil) throws {
         let userDefaultsInteractor = UserDefaultsInteractor.sharedApplicationGroupInteractor
 
-        let tunnelConfig = try TunnelConfigurationManager.shared.getConfiguration(accountToken: accountToken)
-            ?? TunnelConfiguration(
-                accountToken: accountToken,
-                relayConstraints: RelayConstraints.default,
-                interface: InterfaceConfiguration.default)
+        let tunnelConfig = (
+            try? TunnelConfigurationManager.shared
+                .getConfiguration(for: accountToken)
+            ) ?? TunnelConfiguration.default(with: accountToken)
 
-        _ = try TunnelConfigurationManager.shared.addConfiguration(tunnelConfig)
+        _ = try TunnelConfigurationManager.shared.saveConfiguration(tunnelConfig)
 
         // Save the account token and expiry into preferences
         userDefaultsInteractor.accountToken = accountToken
@@ -86,3 +85,4 @@ class Account {
     }
 
 }
+

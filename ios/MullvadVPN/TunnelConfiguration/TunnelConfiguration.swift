@@ -25,6 +25,14 @@ struct TunnelConfiguration: Codable {
     var accountToken: String
     var relayConstraints: RelayConstraints
     var interface: InterfaceConfiguration
+
+    static func `default`(with accountToken: String) -> TunnelConfiguration {
+        return TunnelConfiguration(
+            accountToken: accountToken,
+            relayConstraints: RelayConstraints.default,
+            interface: InterfaceConfiguration.default
+        )
+    }
 }
 
 enum TunnelConfigurationParseError: Error {
@@ -37,8 +45,9 @@ extension NETunnelProviderProtocol {
     func asTunnelConfiguration() -> TunnelConfiguration? {
         guard let passwordReference = passwordReference else { return nil }
 
-        return try? TunnelConfigurationManager.shared
-            .getConfigurationFromKeychainRef(passwordReference)
+        let storedTunnelConfig = try? StoredTunnelConfiguration(keychainRef: passwordReference)
+
+        return try? storedTunnelConfig?.get()
     }
 
 }
