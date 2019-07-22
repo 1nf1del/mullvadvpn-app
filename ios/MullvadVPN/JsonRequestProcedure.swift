@@ -1,5 +1,5 @@
 //
-//  JSONRequestProcedure.swift
+//  JsonRequestProcedure.swift
 //  MullvadVPN
 //
 //  Created by pronebird on 14/05/2019.
@@ -9,7 +9,7 @@
 import Foundation
 import ProcedureKit
 
-final class JSONRequestProcedure<Input, Output: Decodable>: GroupProcedure, InputProcedure, OutputProcedure {
+final class JsonRequestProcedure<Input, Output: Decodable>: GroupProcedure, InputProcedure, OutputProcedure {
 
     typealias URLRequestBuilder = (Input) throws -> URLRequest
 
@@ -39,7 +39,7 @@ final class JSONRequestProcedure<Input, Output: Decodable>: GroupProcedure, Inpu
     }
 }
 
-extension JSONRequestProcedure where Input == Void {
+extension JsonRequestProcedure where Input == Void {
     convenience init(requestBuilder: @escaping URLRequestBuilder) {
         self.init(input: (), requestBuilder: requestBuilder)
     }

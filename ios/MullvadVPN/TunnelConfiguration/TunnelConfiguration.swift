@@ -35,11 +35,6 @@ struct TunnelConfiguration: Codable {
     }
 }
 
-enum TunnelConfigurationParseError: Error {
-    case emptyPasswordRef
-    case keychain(Error)
-}
-
 extension NETunnelProviderProtocol {
 
     func asTunnelConfiguration() -> TunnelConfiguration? {

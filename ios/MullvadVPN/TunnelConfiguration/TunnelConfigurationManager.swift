@@ -30,9 +30,8 @@ class TunnelConfigurationManager {
         try storedTunnelConfig.update(configuration)
 
         pushPublicKey(
-            accountToken: configuration.accountToken,
-            publicKey: configuration.interface.privateKey.publicKey()
-        )
+            configuration.interface.privateKey.publicKey(),
+            for: configuration.accountToken)
     }
 
     func getConfiguration(for accountToken: String) throws -> TunnelConfiguration {
@@ -41,7 +40,7 @@ class TunnelConfigurationManager {
         return try storedTunnelConfig.get()
     }
 
-    private func pushPublicKey(accountToken: String, publicKey: Data) {
+    private func pushPublicKey(_ publicKey: Data, for accountToken: String) {
         let request = MullvadAPI.WireguardKeyRequest(
             accountToken: accountToken,
             publicKey: publicKey
@@ -71,14 +70,17 @@ class TunnelConfigurationManager {
 
         let userDefaultsInteractor = UserDefaultsInteractor.sharedApplicationGroupInteractor
 
+        // Make sure we only update the system tunnel configuration for the active account token
+        // since we only use one system VPN profile.
         if tunnelConfig.accountToken == userDefaultsInteractor.accountToken {
             updateSystemTunnelConfiguration(
-                keychainRef: try storedTunnelConfig.makeKeychainRef()
+                keychainRef: try storedTunnelConfig.makeKeychainRef(),
+                serverAddress: "\(tunnelConfig.relayConstraints)"
             )
         }
     }
 
-    func updateSystemTunnelConfiguration(keychainRef: Data) {
+    func updateSystemTunnelConfiguration(keychainRef: Data, serverAddress: String) {
         NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
             if let error = error {
                 os_log(.error, "Failed to load NETunnelProviderManager from preferences: %s",
@@ -89,7 +91,7 @@ class TunnelConfigurationManager {
             let protocolConfiguration = NETunnelProviderProtocol()
             protocolConfiguration.providerBundleIdentifier = ApplicationConfiguration.packetTunnelExtensionIdentifier
             protocolConfiguration.passwordReference = keychainRef
-            protocolConfiguration.serverAddress = "Multiple"
+            protocolConfiguration.serverAddress = serverAddress
 
             let tunnelManagers = managers ?? []
             let firstTunnel = tunnelManagers.first ?? NETunnelProviderManager()

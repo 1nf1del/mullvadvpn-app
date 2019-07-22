@@ -31,10 +31,10 @@ class ConnectViewController: UIViewController, RootContainment {
         guard let selectLocationController = segue.source as? SelectLocationController else { return }
         guard let selectedItem = selectLocationController.selectedItem else { return }
 
-        let relayLocation = selectedItem.intoRelayLocationConstraint()
-        let relayConstraint = RelayConstraints(location: .only(relayLocation))
+        let relayLocationConstraint = selectedItem.intoRelayLocationConstraint()
+        let relayConstraints = RelayConstraints(location: .only(relayLocationConstraint))
 
-        // SAVE TUNNEL RELAY CONSTRAINT
+        try? TunnelConfigurationInteractor.updateRelayConstraints(relayConstraints)
     }
 
 }

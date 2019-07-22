@@ -72,12 +72,8 @@ class Account {
     private class func setupAccount(accountToken: String, expiry: Date? = nil) throws {
         let userDefaultsInteractor = UserDefaultsInteractor.sharedApplicationGroupInteractor
 
-        let tunnelConfig = (
-            try? TunnelConfigurationManager.shared
-                .getConfiguration(for: accountToken)
-            ) ?? TunnelConfiguration.default(with: accountToken)
-
-        _ = try TunnelConfigurationManager.shared.saveConfiguration(tunnelConfig)
+        // Make sure that the system VPN configuration exists
+        _ = try TunnelConfigurationInteractor.makeTunnelConfiguration(for: accountToken)
 
         // Save the account token and expiry into preferences
         userDefaultsInteractor.accountToken = accountToken

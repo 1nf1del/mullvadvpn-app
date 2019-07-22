@@ -11,6 +11,7 @@ import Foundation
 /// The service name associated with the key store
 private let kServiceName = "Tunnel Configuration Store"
 
+/// A class for manipulating the TunnelConfiguration stored in Keychain
 class StoredTunnelConfiguration {
     let accountToken: String
 
