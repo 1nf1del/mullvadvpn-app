@@ -91,6 +91,10 @@
 		58CE5E7C224146470008646E /* PacketTunnelProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58CE5E7B224146470008646E /* PacketTunnelProvider.swift */; };
 		58CE5E81224146470008646E /* PacketTunnel.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 58CE5E79224146470008646E /* PacketTunnel.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		58DD8DCA22E1C9CF00540D00 /* TunnelConfigurationInteractor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DD8DC922E1C9CF00540D00 /* TunnelConfigurationInteractor.swift */; };
+		58DD8DCC22E708C100540D00 /* Collect2Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DD8DCB22E708C100540D00 /* Collect2Procedure.swift */; };
+		58DD8DCD22E70AB900540D00 /* Collect2Procedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DD8DCB22E708C100540D00 /* Collect2Procedure.swift */; };
+		58DD8DCF22E714F400540D00 /* NETunnelProviderManagerProcedures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DD8DCE22E714F400540D00 /* NETunnelProviderManagerProcedures.swift */; };
+		58DD8DD022E714F400540D00 /* NETunnelProviderManagerProcedures.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58DD8DCE22E714F400540D00 /* NETunnelProviderManagerProcedures.swift */; };
 		58F19E31228B2AEB00C7710B /* JsonRequestProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E30228B2AEB00C7710B /* JsonRequestProcedure.swift */; };
 		58F19E33228B383300C7710B /* AccountVerificationProcedure.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E32228B383300C7710B /* AccountVerificationProcedure.swift */; };
 		58F19E35228C15BA00C7710B /* SpinnerActivityIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 58F19E34228C15BA00C7710B /* SpinnerActivityIndicatorView.swift */; };
@@ -198,6 +202,8 @@
 		58CE5E7D224146470008646E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		58CE5E7E224146470008646E /* PacketTunnel.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = PacketTunnel.entitlements; sourceTree = "<group>"; };
 		58DD8DC922E1C9CF00540D00 /* TunnelConfigurationInteractor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TunnelConfigurationInteractor.swift; sourceTree = "<group>"; };
+		58DD8DCB22E708C100540D00 /* Collect2Procedure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Collect2Procedure.swift; sourceTree = "<group>"; };
+		58DD8DCE22E714F400540D00 /* NETunnelProviderManagerProcedures.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NETunnelProviderManagerProcedures.swift; sourceTree = "<group>"; };
 		58F19E30228B2AEB00C7710B /* JsonRequestProcedure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JsonRequestProcedure.swift; sourceTree = "<group>"; };
 		58F19E32228B383300C7710B /* AccountVerificationProcedure.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountVerificationProcedure.swift; sourceTree = "<group>"; };
 		58F19E34228C15BA00C7710B /* SpinnerActivityIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinnerActivityIndicatorView.swift; sourceTree = "<group>"; };
@@ -251,6 +257,7 @@
 				58C6B34722BA9730003C19AD /* TunnelConfigurationManager.swift */,
 				58AFC6EA22C3C1A8001C0EA2 /* StoredTunnelConfiguration.swift */,
 				58DD8DC922E1C9CF00540D00 /* TunnelConfigurationInteractor.swift */,
+				58DD8DCE22E714F400540D00 /* NETunnelProviderManagerProcedures.swift */,
 			);
 			path = TunnelConfiguration;
 			sourceTree = "<group>";
@@ -334,6 +341,7 @@
 				58B8743122B25A7600015324 /* WireguardAssociatedAddresses.swift */,
 				58C6B35322BB87C4003C19AD /* WireguardPrivateKey.swift */,
 				58C6B35D22BBBFE3003C19AD /* Data+HexCoding.swift */,
+				58DD8DCB22E708C100540D00 /* Collect2Procedure.swift */,
 			);
 			path = MullvadVPN;
 			sourceTree = "<group>";
@@ -617,6 +625,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				58BFA5CC22A7CE1F00A6173D /* ApplicationConfiguration.swift in Sources */,
+				58DD8DCC22E708C100540D00 /* Collect2Procedure.swift in Sources */,
 				5840250122B1124600E4CFEC /* IpAddress+Codable.swift in Sources */,
 				582BB1B52295780F0055B6EF /* AccountExpiry.swift in Sources */,
 				582BB1B3229574F40055B6EF /* SettingsAccountCell.swift in Sources */,
@@ -656,6 +665,7 @@
 				58CE5E64224146200008646E /* AppDelegate.swift in Sources */,
 				58C6B35E22BBBFE3003C19AD /* Data+HexCoding.swift in Sources */,
 				58CCA01222424D11004F3011 /* SettingsViewController.swift in Sources */,
+				58DD8DCF22E714F400540D00 /* NETunnelProviderManagerProcedures.swift in Sources */,
 				58F19E33228B383300C7710B /* AccountVerificationProcedure.swift in Sources */,
 				589AB4F7227B64450039131E /* BasicTableViewCell.swift in Sources */,
 				5888AD7F2279B6BF0051EB06 /* RelayStatusIndicatorView.swift in Sources */,
@@ -691,6 +701,8 @@
 				58781CD022AE892D009B9D8E /* UserDefaultsInteractor.swift in Sources */,
 				58C6B35522BB87C4003C19AD /* WireguardPrivateKey.swift in Sources */,
 				58C6B35F22BBBFE3003C19AD /* Data+HexCoding.swift in Sources */,
+				58DD8DD022E714F400540D00 /* NETunnelProviderManagerProcedures.swift in Sources */,
+				58DD8DCD22E70AB900540D00 /* Collect2Procedure.swift in Sources */,
 				5840250522B11AB700E4CFEC /* MullvadEndpoint.swift in Sources */,
 				58C6B35222BB7D09003C19AD /* WireguardAssociatedAddresses.swift in Sources */,
 				58BFA5C722A7C97F00A6173D /* RelayCache.swift in Sources */,

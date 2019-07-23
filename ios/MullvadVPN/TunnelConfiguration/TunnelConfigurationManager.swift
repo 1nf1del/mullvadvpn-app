@@ -41,73 +41,173 @@ class TunnelConfigurationManager {
     }
 
     private func pushPublicKey(_ publicKey: Data, for accountToken: String) {
-        let request = MullvadAPI.WireguardKeyRequest(
+        let pushKey = MullvadAPI.pushWireguardKey(MullvadAPI.WireguardKeyRequest(
             accountToken: accountToken,
             publicKey: publicKey
-        )
-
-        let pushKey = MullvadAPI.pushWireguardKey(request)
+        ))
 
         let parseResponse = TransformProcedure { try $0.result.get() }
             .injectResult(from: pushKey)
 
-        let saveAddresses = TransformProcedure { [weak self] (addresses) in
-            try self?.updateAssociatedAddresses(
-                accountToken: accountToken,
-                addresses: addresses
-            )
-            }.injectResult(from: parseResponse)
+        let updateAssociatedAddresses = UpdateAssociatedAddressesProcedure()
+            .injectResult(from: parseResponse) { (accountToken, $0) }
 
-        queue.addOperation(GroupProcedure(operations: [pushKey, parseResponse, saveAddresses]))
+        let prepareConfiguration = PrepareSystemTunnelConfigurationProcedure()
+            .injectResult(from: updateAssociatedAddresses)
+
+        let saveConfiguration = SaveSystemTunnelConfigurationProcedure(configureUsing: {
+            (tunnelManager) in
+            // disable VPN configurations of other apps
+            tunnelManager.isEnabled = true
+        }).injectResult(from: prepareConfiguration)
+
+        // Make sure we only update the system VPN configuration for the active account token
+        saveConfiguration.addCondition(BlockCondition(block: { () -> Bool in
+            let userDefaults = UserDefaultsInteractor.sharedApplicationGroupInteractor
+
+            guard let activeAccountToken = userDefaults.accountToken else { return false }
+
+            return activeAccountToken == accountToken
+        }))
+
+        queue.addOperation(GroupProcedure(operations: [
+            pushKey,
+            parseResponse,
+            updateAssociatedAddresses,
+            prepareConfiguration,
+            saveConfiguration]))
+    }
+}
+
+private class PrepareSystemTunnelConfigurationProcedure: Procedure, InputProcedure, OutputProcedure {
+    var input: Pending<StoredTunnelConfiguration>
+    var output: Pending<ProcedureResult<NETunnelProviderProtocol>> = .pending
+
+    init(storedTunnelConfig: StoredTunnelConfiguration? = nil) {
+        input = storedTunnelConfig.flatMap { .ready($0) } ?? .pending
+        super.init()
     }
 
-    private func updateAssociatedAddresses(accountToken: String, addresses: WireguardAssociatedAddresses) throws {
+    override func execute() {
+        guard let storedTunnelConfig = input.value else {
+            finish(with: ProcedureKitError.requirementNotSatisfied())
+            return
+        }
+
+        do {
+            let tunnelConfig = try storedTunnelConfig.get()
+            let protocolConfiguration = NETunnelProviderProtocol()
+
+            protocolConfiguration.providerBundleIdentifier = ApplicationConfiguration.packetTunnelExtensionIdentifier
+            protocolConfiguration.passwordReference = try storedTunnelConfig.makeKeychainRef()
+            protocolConfiguration.serverAddress = "\(tunnelConfig.relayConstraints)"
+
+            finish(withResult: .success(protocolConfiguration))
+        } catch {
+            finish(with: error)
+        }
+    }
+}
+
+private class UpdateStoredTunnelConfiguration: Procedure, InputProcedure {
+    typealias UpdateBlock = (TunnelConfiguration) throws -> TunnelConfiguration
+
+    var input: Pending<String>
+
+    private let updateBlock: UpdateBlock
+
+    init(accountToken: String? = nil, updateUsing updateBlock: @escaping UpdateBlock) {
+        input = accountToken.flatMap { .ready($0) } ?? .pending
+        self.updateBlock = updateBlock
+
+        super.init()
+    }
+
+    override func execute() {
+        guard let accountToken = input.value else {
+            finish(with: ProcedureKitError.requirementNotSatisfied())
+            return
+        }
+        
         let storedTunnelConfig = StoredTunnelConfiguration(accountToken: accountToken)
 
-        var tunnelConfig = try storedTunnelConfig.get()
-        tunnelConfig.interface.addresses = [addresses.ipv4Address, addresses.ipv6Address]
-        try storedTunnelConfig.update(tunnelConfig)
+        do {
+            let tunnelConfig = try storedTunnelConfig.get()
+            let updatedTunnelConfig = try updateBlock(tunnelConfig)
 
-        let userDefaultsInteractor = UserDefaultsInteractor.sharedApplicationGroupInteractor
+            try storedTunnelConfig.update(updatedTunnelConfig)
 
-        // Make sure we only update the system tunnel configuration for the active account token
-        // since we only use one system VPN profile.
-        if tunnelConfig.accountToken == userDefaultsInteractor.accountToken {
-            updateSystemTunnelConfiguration(
-                keychainRef: try storedTunnelConfig.makeKeychainRef(),
-                serverAddress: "\(tunnelConfig.relayConstraints)"
-            )
+            finish()
+        } catch {
+            finish(with: error)
         }
     }
+}
 
-    func updateSystemTunnelConfiguration(keychainRef: Data, serverAddress: String) {
-        NETunnelProviderManager.loadAllFromPreferences { (managers, error) in
-            if let error = error {
-                os_log(.error, "Failed to load NETunnelProviderManager from preferences: %s",
-                       error.localizedDescription)
-                return
-            }
+private class UpdateAssociatedAddressesProcedure: Procedure, InputProcedure, OutputProcedure {
+    var input: Pending<(accountToken: String, addresses: WireguardAssociatedAddresses)>
+    var output: Pending<ProcedureResult<StoredTunnelConfiguration>> = .pending
 
-            let protocolConfiguration = NETunnelProviderProtocol()
-            protocolConfiguration.providerBundleIdentifier = ApplicationConfiguration.packetTunnelExtensionIdentifier
-            protocolConfiguration.passwordReference = keychainRef
-            protocolConfiguration.serverAddress = serverAddress
+    init(request: Input? = nil) {
+        input = request.flatMap { .ready($0) } ?? .pending
 
-            let tunnelManagers = managers ?? []
-            let firstTunnel = tunnelManagers.first ?? NETunnelProviderManager()
-            firstTunnel.protocolConfiguration = protocolConfiguration
-            firstTunnel.isEnabled = true
+        super.init()
+    }
 
-            firstTunnel.saveToPreferences(completionHandler: { (error) in
-                if let error = error {
-                    os_log(.error, "Failed to save tunnel to preferences: %s", error.localizedDescription)
-                }
-                do {
-                    try firstTunnel.connection.startVPNTunnel()
-                } catch {
-                    os_log(.error, "Failed to start the VPN tunnel: %s", error.localizedDescription)
-                }
-            })
+    override func execute() {
+        guard let (accountToken, addresses) = input.value else {
+            finish(with: ProcedureKitError.requirementNotSatisfied())
+            return
         }
+
+        do {
+            let storedTunnelConfig = StoredTunnelConfiguration(accountToken: accountToken)
+
+            var tunnelConfig = try storedTunnelConfig.get()
+            tunnelConfig.interface.addresses = [
+                addresses.ipv4Address,
+                addresses.ipv6Address
+            ]
+
+            try storedTunnelConfig.update(tunnelConfig)
+
+            finish(withResult: .success(storedTunnelConfig))
+        } catch {
+            finish(with: error)
+        }
+    }
+}
+
+private class SaveSystemTunnelConfigurationProcedure: GroupProcedure, InputProcedure {
+    typealias ConfigurationBlock = (NETunnelProviderManager) -> Void
+
+    var input: Pending<NETunnelProviderProtocol>
+
+    init(dispatchQueue underlyingQueue: DispatchQueue? = nil,
+         request: NETunnelProviderProtocol? = nil,
+         configureUsing configurationBlock: @escaping ConfigurationBlock) {
+        input = request.flatMap { .ready($0) } ?? .pending
+
+        let loadTunnels = LoadTunnelProviderManagersProcedure()
+        let makeTunnel = TransformProcedure { $0.first ?? NETunnelProviderManager() }
+            .injectResult(from: loadTunnels)
+
+        // Solely exists to capture the input from the group
+        let inputConfig = TransformProcedure<NETunnelProviderProtocol, NETunnelProviderProtocol> { $0 }
+
+        let collectOutputs = Collect2Procedure(from: makeTunnel, and: inputConfig)
+        let assignConfig = TransformProcedure {  $0.protocolConfiguration = $1 }
+            .injectResult(from: collectOutputs)
+
+        let saveTunnel = SaveTunnelProviderManagerProcedure()
+            .injectResult(from: makeTunnel)
+
+        saveTunnel.addDependency(assignConfig)
+
+        super.init(dispatchQueue: underlyingQueue, operations: [
+            loadTunnels, makeTunnel, assignConfig, collectOutputs, saveTunnel])
+
+        // Bind the input of the group procedure to the inputConfig procedure
+        bindAndNotifySetInputReady(to: inputConfig)
     }
 }

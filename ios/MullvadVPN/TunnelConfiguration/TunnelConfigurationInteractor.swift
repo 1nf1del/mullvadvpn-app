@@ -14,6 +14,7 @@ class TunnelConfigurationInteractor {
 
     private init() {}
 
+    /// Ensure that tunnel configuration exists for the given account token
     class func makeTunnelConfiguration(for accountToken: String) throws -> TunnelConfiguration {
         let tunnelConfigManager = TunnelConfigurationManager.shared
 
