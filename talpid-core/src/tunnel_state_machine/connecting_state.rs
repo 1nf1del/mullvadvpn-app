@@ -310,42 +310,54 @@ impl TunnelState for ConnectingState {
         if shared_values.is_offline {
             return BlockedState::enter(shared_values, BlockReason::IsOffline);
         }
-        match shared_values
-            .tunnel_parameters_generator
-            .generate(retry_attempt)
-        {
-            None => BlockedState::enter(shared_values, BlockReason::NoMatchingRelay),
-            Some(tunnel_parameters) => {
-                if let Err(error) = Self::set_firewall_policy(shared_values, &tunnel_parameters) {
-                    error!(
-                        "{}",
-                        error.display_chain_with_msg(
-                            "Failed to apply firewall policy for connecting state"
-                        )
-                    );
-                    BlockedState::enter(shared_values, BlockReason::StartTunnelError)
-                } else {
-                    match Self::start_tunnel(
-                        tunnel_parameters,
-                        &shared_values.log_dir,
-                        &shared_values.resource_dir,
-                        shared_values.tun_provider.borrow(),
-                        retry_attempt,
-                    ) {
-                        Ok(connecting_state) => {
-                            let params = connecting_state.tunnel_parameters.clone();
-                            (
-                                TunnelStateWrapper::from(connecting_state),
-                                TunnelStateTransition::Connecting(params.get_tunnel_endpoint()),
+        loop {
+            match shared_values
+                .tunnel_parameters_generator
+                .generate(retry_attempt)
+            {
+                None => {
+                    return BlockedState::enter(shared_values, BlockReason::NoMatchingRelay);
+                }
+                Some(tunnel_parameters) => {
+                    if let Err(error) = Self::set_firewall_policy(shared_values, &tunnel_parameters)
+                    {
+                        error!(
+                            "{}",
+                            error.display_chain_with_msg(
+                                "Failed to apply firewall policy for connecting state"
                             )
-                        }
-                        Err(error) => {
-                            log::error!("Failed to start tunnel: {}", error);
-                            let block_reason = match error {
-                                tunnel::Error::EnableIpv6Error => BlockReason::Ipv6Unavailable,
-                                _ => BlockReason::StartTunnelError,
-                            };
-                            BlockedState::enter(shared_values, block_reason)
+                        );
+                        return BlockedState::enter(shared_values, BlockReason::StartTunnelError);
+                    } else {
+                        match Self::start_tunnel(
+                            tunnel_parameters,
+                            &shared_values.log_dir,
+                            &shared_values.resource_dir,
+                            shared_values.tun_provider.borrow(),
+                            retry_attempt,
+                        ) {
+                            Ok(connecting_state) => {
+                                let params = connecting_state.tunnel_parameters.clone();
+                                return (
+                                    TunnelStateWrapper::from(connecting_state),
+                                    TunnelStateTransition::Connecting(params.get_tunnel_endpoint()),
+                                );
+                            }
+                            Err(tunnel::Error::WireguardTunnelMonitoringError(
+                                tunnel::wireguard::Error::StartWireguardError { status: -2 },
+                            )) => {
+                                log::warn!(
+                                    "Retrying to connect after failing to start Wireguard tunnel"
+                                );
+                            }
+                            Err(error) => {
+                                log::error!("Failed to start tunnel: {}", error);
+                                let block_reason = match error {
+                                    tunnel::Error::EnableIpv6Error => BlockReason::Ipv6Unavailable,
+                                    _ => BlockReason::StartTunnelError,
+                                };
+                                return BlockedState::enter(shared_values, block_reason);
+                            }
                         }
                     }
                 }
